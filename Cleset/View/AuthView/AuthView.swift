@@ -24,7 +24,7 @@ struct AuthView: View {
             } else {
                 switch viewModel.authenticatedState {
                     case .authenticated:
-                        HomeView()
+                        MainTabView()
                     case .unauthenticated:
                         LoginView(authViewModel: viewModel)
                 }

@@ -79,10 +79,6 @@ final class AuthService: AuthServiceType {
             guard let presentingView = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.rootViewController else { return }
             
             GIDSignIn.sharedInstance.signIn(withPresenting: presentingView) { signInResult, error in
-                guard let result = signInResult else {
-                    promise(.failure(AuthServiceError.userDataError))
-                    return
-                }
                 
                 guard let user = signInResult?.user,
                       let idToken = user.idToken?.tokenString 

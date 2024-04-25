@@ -32,8 +32,9 @@ struct YourApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationView {
-                AuthView(viewModel: AuthViewModel(container: container))
-                    .environmentObject(container)
+//                AuthView(viewModel: AuthViewModel(container: container))
+//                    .environmentObject(container)
+                MainTabView()
             }
         }
     }

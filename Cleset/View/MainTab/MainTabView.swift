@@ -15,6 +15,7 @@ enum TabType {
 
 struct MainTabView: View {
     @State var selectedTab: TabType = .home
+    @EnvironmentObject var container: DIContainer
     
     var body: some View {
         VStack {
@@ -24,7 +25,10 @@ struct MainTabView: View {
                 case .board:
                     BoardView()
                 case .home:
-                    HomeView()
+                    NavigationStack {
+                        HomeView(viewModel: HomeViewModel(container: container))
+                    }
+                    
                 case .profile:
                     ProfileView()
             }

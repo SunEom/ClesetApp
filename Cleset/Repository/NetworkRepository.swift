@@ -20,22 +20,32 @@ enum NetworkError: Error {
     case tokenError
 }
 
-final class NetworkRepository {
-    static let shared: NetworkRepository = NetworkRepository()
+class NetworkRepository {
     
-    private let hostURL = "http://127.0.0.1:8000"
+    //MARK: - General
     
-    private var subscriptions: Set<AnyCancellable> = Set<AnyCancellable>()
+    var subscriptions: Set<AnyCancellable> = Set<AnyCancellable>()
     
-    private func createURL(withPath path: String) -> URL? {
-        let urlString = "\(hostURL)/\(path)"
+    func createURL(withPath path: String) -> URL? {
+        let urlString = "\(K.serverURL)/\(path)"
         guard let url = URL(string: urlString) else {
             return nil
         }
         return url
     }
     
-    private func createPostRequest(withPath path: String, bodyData: Any) -> URLRequest? {
+    //MARK: - GET
+    
+    func fetchData(from url: URL) -> AnyPublisher<Data, NetworkError> {
+        return URLSession.shared.dataTaskPublisher(for: url)
+            .map { (data, response) in data }
+            .mapError { _ in NetworkError.urlError }
+            .eraseToAnyPublisher()
+    }
+    
+    //MARK: - POST
+    
+    func createPostRequest(withPath path: String, bodyData: Any) -> URLRequest? {
         do {
             let data = try JSONSerialization.data(
                 withJSONObject: bodyData,
@@ -55,46 +65,28 @@ final class NetworkRepository {
         
     }
     
-    private func fetchData(from url: URL) -> AnyPublisher<Data, NetworkError> {
-        return URLSession.shared.dataTaskPublisher(for: url)
-            .map { (data, response) in data }
-            .mapError { _ in NetworkError.urlError }
-            .eraseToAnyPublisher()
-    }
-    
-    private func postData(from urlRequest: URLRequest) -> AnyPublisher<Data, NetworkError> {
-        return URLSession.shared.dataTaskPublisher(for: urlRequest)
-            .map { (data, response) in data }
-            .mapError { _ in NetworkError.urlError }
-            .eraseToAnyPublisher()
-    }
-      
-    
-    func getUserData() -> AnyPublisher<UserObject, NetworkError> {
-        return Future<UserObject, NetworkError> { [weak self] promise in
+    func postData(withPath path: String, body: Any) -> AnyPublisher<Data, NetworkError> {
+        return Future<Data, NetworkError> { [weak self] promise in
             guard let self = self else { return }
-            guard let token = UserManager.getIdToken() else {
-                promise(.failure(NetworkError.tokenError))
-                return
-            }
-            guard let request = createPostRequest(withPath: "user/userinfo", bodyData: ["idToken": token]) else {
+            
+            guard let request = createPostRequest(withPath: path, bodyData: body) else {
                 promise(.failure(NetworkError.urlRequestError))
                 return
             }
             
-            postData(from: request)
-                .decode(type: UserObject.self, decoder: JSONDecoder())
+            URLSession.shared.dataTaskPublisher(for: request)
+                .map { (data, response) in data }
                 .sink(receiveCompletion: { completion in
                     if case let .failure(error) = completion {
                         promise(.failure(NetworkError.customError(error)))
                     }
-                }, receiveValue: { userData in
-                    promise(.success(userData))
+                }, receiveValue: { data in
+                    promise(.success(data))
                 })
                 .store(in: &subscriptions)
         }
         .eraseToAnyPublisher()
-
+        
     }
     
 }

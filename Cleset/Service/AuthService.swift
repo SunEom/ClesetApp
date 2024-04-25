@@ -21,12 +21,10 @@ enum AuthServiceError: Error {
 protocol AuthServiceType {
     func checkLoginState() -> AnyPublisher<Bool, AuthServiceError>
     func login() -> AnyPublisher<Void, AuthServiceError>
-    func getUserData() -> AnyPublisher<UserObject, AuthServiceError>
+    
 }
 
 final class AuthService: AuthServiceType {
-    
-    let networkRepository: NetworkRepository = NetworkRepository()
     
     func checkLoginState() -> AnyPublisher<Bool, AuthServiceError> {
         Future { promise in
@@ -59,11 +57,7 @@ final class AuthService: AuthServiceType {
             .eraseToAnyPublisher()
     }
     
-    func getUserData() -> AnyPublisher<UserObject, AuthServiceError> {
-        return networkRepository.getUserData()
-            .mapError { AuthServiceError.customError($0) }
-            .eraseToAnyPublisher()
-    }
+    
     
     private func googleLogin() -> AnyPublisher<Void, AuthServiceError> {
         return Future { promise in
@@ -132,7 +126,7 @@ final class StubAuthService: AuthServiceType {
         return Empty().eraseToAnyPublisher()
     }
     
-    func getUserData() -> AnyPublisher<UserObject, AuthServiceError> {
+    func getUserData(idToken: String) -> AnyPublisher<UserObject, AuthServiceError> {
         return Empty().eraseToAnyPublisher()
     }
 }

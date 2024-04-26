@@ -57,7 +57,6 @@ struct ClothCell: View {
                 .clipShape(RoundedRectangle(cornerRadius: 5))
                 .shadow(radius: 1)
         )
-        .foregroundStyle(Color.black)
     }
 }
 

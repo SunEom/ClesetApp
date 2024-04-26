@@ -1,5 +1,5 @@
 //
-//  ClothCellViewModel.swift
+//  DetailViewModel.swift
 //  Cleset
 //
 //  Created by 엄태양 on 4/26/24.
@@ -8,13 +8,12 @@
 import Foundation
 import Combine
 
-final class ClothCellViewModel: ObservableObject {
-    @Published var clothData: ClothObject
-    
+final class DetailViewModel: ObservableObject {
     enum Action {
         case toggleFavorite
     }
     
+    @Published var clothData: ClothObject
     private let container: DIContainer
     private var subscriptions: Set<AnyCancellable> = Set<AnyCancellable>()
     
@@ -34,7 +33,7 @@ final class ClothCellViewModel: ObservableObject {
                 .sink { completion in
                 } receiveValue: { [weak self] _ in
                     self?.clothData.favToggle()
-                }.store(in: &subscriptions)       
+                }.store(in: &subscriptions)
         }
     }
 }

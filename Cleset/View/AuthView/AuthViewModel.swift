@@ -56,7 +56,7 @@ final class AuthViewModel: ObservableObject {
 
             case .fetchUserData:
                 guard let idToken = UserManager.getIdToken() else { return }
-                container.services.userService.getUserData(idToken: idToken)
+                container.services.userService.getUserData()
                     .receive(on: DispatchQueue.main)
                     .sink { completion in
                     } receiveValue: { [weak self] user in

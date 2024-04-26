@@ -65,11 +65,20 @@ class NetworkRepository {
         
     }
     
-    func postData(withPath path: String, body: Any) -> AnyPublisher<Data, NetworkError> {
+    func postData(withPath path: String, body: [String: Any] = [:]) -> AnyPublisher<Data, NetworkError> {
         return Future<Data, NetworkError> { [weak self] promise in
             guard let self = self else { return }
             
-            guard let request = createPostRequest(withPath: path, bodyData: body) else {
+            guard let idToken = UserManager.getIdToken() else {
+                print("asdr")
+                promise(.failure(NetworkError.tokenError))
+                return
+            }
+            
+            var tokenBody = body
+            tokenBody["idToken"] = idToken
+            
+            guard let request = createPostRequest(withPath: path, bodyData: tokenBody) else {
                 promise(.failure(NetworkError.urlRequestError))
                 return
             }

@@ -9,22 +9,22 @@ import Foundation
 import Combine
 
 protocol UserServiceType {
-    func getUserData(idToken: String) -> AnyPublisher<UserObject, AuthServiceError>
+    func getUserData() -> AnyPublisher<UserObject, AuthServiceError>
 }
 
 final class UserService: UserServiceType {
     
     let userRepository: UserRepository = UserNetworkRepository()
     
-    func getUserData(idToken: String) -> AnyPublisher<UserObject, AuthServiceError> {
-        return userRepository.getUserData(idToken: idToken)
+    func getUserData() -> AnyPublisher<UserObject, AuthServiceError> {
+        return userRepository.getUserData()
             .mapError { AuthServiceError.customError($0) }
             .eraseToAnyPublisher()
     }
 }
 
 final class StubUserService: UserServiceType {
-    func getUserData(idToken: String) -> AnyPublisher<UserObject, AuthServiceError> {
+    func getUserData() -> AnyPublisher<UserObject, AuthServiceError> {
         return Empty().eraseToAnyPublisher()
     }
 }

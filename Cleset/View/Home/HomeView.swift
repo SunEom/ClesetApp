@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject var viewModel: HomeViewModel
+    @EnvironmentObject var container: DIContainer
     
     var body: some View {
         VStack {
@@ -36,11 +37,17 @@ struct HomeView: View {
             LazyVStack {
                 ForEach(viewModel.clothes, id: \.clothData.clothId) { viewModel in
                     NavigationLink {
-                        DetailView()
+                        DetailView(
+                            viewModel: DetailViewModel(
+                                clothData: viewModel.clothData,
+                                container: container
+                            )
+                        )
                     } label: {
                         ClothCell(viewModel: viewModel)
                             .padding(.horizontal, 10)
                     }
+                    .buttonStyle(PlainButtonStyle())
 
                 }
             }

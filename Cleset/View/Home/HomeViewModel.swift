@@ -25,8 +25,7 @@ final class HomeViewModel: ObservableObject {
     func send(_ action: Action) {
         switch action {
             case .fetchClothes:
-                guard let idToken = UserManager.getIdToken() else { return }
-                container.services.clothService.getClothList(idToken: idToken)
+                container.services.clothService.getClothList()
                     .receive(on: DispatchQueue.main)
                     .sink { completion in
                     } receiveValue: { [weak self] list in

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct GroupListView: View {
+    @Environment(\.dismiss) var dismiss
     @StateObject var viewModel: GroupListViewModel
     @State var newGroupName: String = ""
     
@@ -82,7 +83,8 @@ struct GroupListView: View {
             LazyVStack {
                 ForEach( viewModel.groups, id: \.folderId) { group in
                     Button {
-                        print(group.folderName)
+                        viewModel.send(.addToGroup(group))
+                        dismiss()
                     } label: {
                         HStack {
                             Text(group.folderName)
@@ -100,5 +102,5 @@ struct GroupListView: View {
 }
 
 #Preview {
-    GroupListView(viewModel: GroupListViewModel(container: .stub))
+    GroupListView(viewModel: GroupListViewModel(container: .stub, clothItem: .stub))
 }

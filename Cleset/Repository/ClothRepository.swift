@@ -16,6 +16,7 @@ protocol ClothRepository {
     func getSeasonCloth(season: Season) -> AnyPublisher<[ClothObject], NetworkError>
     func getCategoryCloth(category: Category) -> AnyPublisher<[ClothObject], NetworkError>
     func getGroupCloth(group: ClothGroupObject) -> AnyPublisher<[ClothObject], NetworkError>
+    func addToGroup(cloth: ClothObject, to group: ClothGroupObject) -> AnyPublisher<Void, NetworkError>
 }
 
 final class ClothNetworkRepository: NetworkRepository, ClothRepository {
@@ -86,6 +87,18 @@ final class ClothNetworkRepository: NetworkRepository, ClothRepository {
         
         return postData(withPath: "cloth/folder/detail", body: body)
             .decode(type: [ClothObject].self, decoder: JSONDecoder())
+            .mapError { NetworkError.customError($0) }
+            .eraseToAnyPublisher()
+    }
+    
+    func addToGroup(cloth: ClothObject, to group: ClothGroupObject) -> AnyPublisher<Void, NetworkError> {
+        let body: [String: Any] = [
+            "folder_id": group.folderId,
+            "cloth_id": cloth.clothId
+        ]
+        
+        return postData(withPath: "cloth/folder/insert", body: body)
+            .map { _ in () }
             .mapError { NetworkError.customError($0) }
             .eraseToAnyPublisher()
     }

@@ -20,6 +20,7 @@ protocol ClothServiceType {
     func getSeasonCloth(season: Season) -> AnyPublisher<[ClothObject], ClothServiceError>
     func getCategoryCloth(category: Category) -> AnyPublisher<[ClothObject], ClothServiceError>
     func getGroupCloth(group: ClothGroupObject) -> AnyPublisher<[ClothObject], ClothServiceError>
+    func addToGroup(cloth: ClothObject, to group: ClothGroupObject) -> AnyPublisher<Void, ClothServiceError>
 }
 
 final class ClothService: ClothServiceType {
@@ -71,6 +72,12 @@ final class ClothService: ClothServiceType {
             .mapError { ClothServiceError.networkError($0)}
             .eraseToAnyPublisher()
     }
+    
+    func addToGroup(cloth: ClothObject, to group: ClothGroupObject) -> AnyPublisher<Void, ClothServiceError> {
+        return clothRepository.addToGroup(cloth: cloth, to: group)
+            .mapError { ClothServiceError.networkError($0)}
+            .eraseToAnyPublisher()
+    }
 }
 
 final class StubClothService: ClothServiceType {
@@ -112,5 +119,9 @@ final class StubClothService: ClothServiceType {
         return Just(group.folderId == 1 ? ClothObject.stubList : [])
             .setFailureType(to: ClothServiceError.self)
             .eraseToAnyPublisher()
+    }
+    
+    func addToGroup(cloth: ClothObject, to group: ClothGroupObject) -> AnyPublisher<Void, ClothServiceError> {
+        return Empty().eraseToAnyPublisher()
     }
 }

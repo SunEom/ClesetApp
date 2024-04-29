@@ -63,7 +63,7 @@ struct DetailView: View {
                                 }
                                 .shadow(radius: 1)
                                 .sheet(isPresented: $groupListViewPresent, content: {
-                                    GroupListView(viewModel: GroupListViewModel(container: container))
+                                    GroupListView(viewModel: GroupListViewModel(container: container, clothItem: viewModel.clothData))
                                         .presentationDetents([.medium])
                                         .presentationDragIndicator(.automatic)
                                 })

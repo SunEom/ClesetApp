@@ -12,15 +12,19 @@ final class GroupListViewModel: ObservableObject {
     enum Action {
         case fetchGroupList
         case creatNewGroup(groupName: String)
+        case addToGroup(ClothGroupObject)
     }
     
     @Published var groups: [ClothGroupObject] = []
     @Published var loading: Bool = false
+    
     private let container: DIContainer
     private var subscriptions: Set<AnyCancellable> = Set<AnyCancellable>()
+    private let clothItem: ClothObject
     
-    init(container: DIContainer) {
+    init(container: DIContainer, clothItem: ClothObject) {
         self.container = container
+        self.clothItem = clothItem
     }
     
     func send(_ action: Action) {
@@ -38,6 +42,15 @@ final class GroupListViewModel: ObservableObject {
             case let .creatNewGroup(groupName):
                 loading = true
                 container.services.clothService.createNewGroup(groupName: groupName)
+                    .receive(on: DispatchQueue.main)
+                    .sink { completion in
+                    } receiveValue: { [weak self]  _ in
+                        self?.send(.fetchGroupList)
+                    }.store(in: &subscriptions)
+                
+            case let .addToGroup(group):
+                loading = true
+                container.services.clothService.addToGroup(cloth: clothItem, to: group)
                     .receive(on: DispatchQueue.main)
                     .sink { completion in
                     } receiveValue: { [weak self]  _ in

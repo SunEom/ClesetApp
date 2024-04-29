@@ -7,11 +7,69 @@
 
 import Foundation
 
+enum Category: String, CaseIterable {
+    case shirt = "상의"
+    case pants = "하의"
+    case onepiece = "한벌옷"
+    case outer = "아우터"
+    case cap = "모자"
+    case shoes = "신발"
+    case bag = "가방"
+    case etc = "기타"
+    
+    var imageName: String {
+        switch self {
+            case .shirt:
+                "shirt"
+            case .pants:
+                "pants"
+            case .onepiece:
+                "onepiece"
+            case .outer:
+                "outer"
+            case .cap:
+                "cap"
+            case .shoes:
+                "shoes"
+            case .bag:
+                "bag"
+            case .etc:
+                "etc"
+        }
+    }
+}
+
 enum Season {
     case spring
     case summer
     case fall
     case winter
+    
+    var imageName: String {
+        switch self {
+            case .spring:
+                "spring"
+            case .summer:
+                "summer"
+            case .fall:
+                "fall"
+            case .winter:
+                "winter"
+        }
+    }
+    
+    var displayName: String {
+        switch self {
+            case .spring:
+                "봄"
+            case .summer:
+                "여름"
+            case .fall:
+                "가을"
+            case .winter:
+                "겨울"
+        }
+    }
 }
 
 struct ClothObject: Decodable {

@@ -13,6 +13,9 @@ protocol ClothRepository {
     func toggleFavorite(clothId: Int, favorite: Int) -> AnyPublisher<Void, NetworkError>
     func getClothGroupList() -> AnyPublisher<[ClothGroupObject], NetworkError>
     func createNewGroup(groupName: String) -> AnyPublisher<Void, NetworkError>
+    func getSeasonCloth(season: Season) -> AnyPublisher<[ClothObject], NetworkError>
+    func getCategoryCloth(category: Category) -> AnyPublisher<[ClothObject], NetworkError>
+    func getGroupCloth(group: ClothGroupObject) -> AnyPublisher<[ClothObject], NetworkError>
 }
 
 final class ClothNetworkRepository: NetworkRepository, ClothRepository {
@@ -50,6 +53,39 @@ final class ClothNetworkRepository: NetworkRepository, ClothRepository {
         
         return postData(withPath: "cloth/folder/create", body: body)
             .map { _ in () }
+            .mapError { NetworkError.customError($0) }
+            .eraseToAnyPublisher()
+    }
+    
+    func getSeasonCloth(season: Season) -> AnyPublisher<[ClothObject], NetworkError> {
+        let body: [String: Any] = [
+            "season": season.displayName,
+        ]
+        
+        return postData(withPath: "cloth/season", body: body)
+            .decode(type: [ClothObject].self, decoder: JSONDecoder())
+            .mapError { NetworkError.customError($0) }
+            .eraseToAnyPublisher()
+    }
+    
+    func getCategoryCloth(category: Category) -> AnyPublisher<[ClothObject], NetworkError> {
+        let body: [String: Any] = [
+            "category": category.rawValue,
+        ]
+        
+        return postData(withPath: "cloth/category", body: body)
+            .decode(type: [ClothObject].self, decoder: JSONDecoder())
+            .mapError { NetworkError.customError($0) }
+            .eraseToAnyPublisher()
+    }
+    
+    func getGroupCloth(group: ClothGroupObject) -> AnyPublisher<[ClothObject], NetworkError> {
+        let body: [String: Any] = [
+            "folder_id": group.folderId,
+        ]
+        
+        return postData(withPath: "cloth/folder/detail", body: body)
+            .decode(type: [ClothObject].self, decoder: JSONDecoder())
             .mapError { NetworkError.customError($0) }
             .eraseToAnyPublisher()
     }

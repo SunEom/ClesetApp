@@ -17,6 +17,9 @@ protocol ClothServiceType {
     func toggleFavorite(clothId: Int, favorite: Int) -> AnyPublisher<Void, ClothServiceError>
     func getClothGroupList() -> AnyPublisher<[ClothGroupObject], ClothServiceError>
     func createNewGroup(groupName: String) -> AnyPublisher<Void, ClothServiceError>
+    func getSeasonCloth(season: Season) -> AnyPublisher<[ClothObject], ClothServiceError>
+    func getCategoryCloth(category: Category) -> AnyPublisher<[ClothObject], ClothServiceError>
+    func getGroupCloth(group: ClothGroupObject) -> AnyPublisher<[ClothObject], ClothServiceError>
 }
 
 final class ClothService: ClothServiceType {
@@ -50,6 +53,24 @@ final class ClothService: ClothServiceType {
             .mapError { ClothServiceError.networkError($0) }
             .eraseToAnyPublisher()
     }
+    
+    func getSeasonCloth(season: Season) -> AnyPublisher<[ClothObject], ClothServiceError> {
+        return clothRepository.getSeasonCloth(season: season)
+            .mapError { ClothServiceError.networkError($0)}
+            .eraseToAnyPublisher()
+    }
+    
+    func getCategoryCloth(category: Category) -> AnyPublisher<[ClothObject], ClothServiceError> {
+        return clothRepository.getCategoryCloth(category: category)
+            .mapError { ClothServiceError.networkError($0)}
+            .eraseToAnyPublisher()
+    }
+    
+    func getGroupCloth(group: ClothGroupObject) -> AnyPublisher<[ClothObject], ClothServiceError> {
+        return clothRepository.getGroupCloth(group: group)
+            .mapError { ClothServiceError.networkError($0)}
+            .eraseToAnyPublisher()
+    }
 }
 
 final class StubClothService: ClothServiceType {
@@ -71,5 +92,25 @@ final class StubClothService: ClothServiceType {
     
     func createNewGroup(groupName: String) -> AnyPublisher<Void, ClothServiceError> {
         return Empty().eraseToAnyPublisher()
+    }
+    
+    func getSeasonCloth(season: Season) -> AnyPublisher<[ClothObject], ClothServiceError> {
+        return Just(ClothObject.stubList)
+            .map { $0.filter { $0.season.contains(season.displayName) }}
+            .setFailureType(to: ClothServiceError.self)
+            .eraseToAnyPublisher()
+    }
+    
+    func getCategoryCloth(category: Category) -> AnyPublisher<[ClothObject], ClothServiceError> {
+        return Just(ClothObject.stubList)
+            .map { $0.filter { $0.category.contains(category.rawValue) }}
+            .setFailureType(to: ClothServiceError.self)
+            .eraseToAnyPublisher()
+    }
+    
+    func getGroupCloth(group: ClothGroupObject) -> AnyPublisher<[ClothObject], ClothServiceError> {
+        return Just(group.folderId == 1 ? ClothObject.stubList : [])
+            .setFailureType(to: ClothServiceError.self)
+            .eraseToAnyPublisher()
     }
 }

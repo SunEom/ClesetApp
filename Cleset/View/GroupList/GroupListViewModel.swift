@@ -38,6 +38,7 @@ final class GroupListViewModel: ObservableObject {
             case let .creatNewGroup(groupName):
                 loading = true
                 container.services.clothService.createNewGroup(groupName: groupName)
+                    .receive(on: DispatchQueue.main)
                     .sink { completion in
                     } receiveValue: { [weak self]  _ in
                         self?.send(.fetchGroupList)

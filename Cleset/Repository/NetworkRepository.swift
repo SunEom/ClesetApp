@@ -85,9 +85,10 @@ class NetworkRepository {
             
             URLSession.shared.dataTaskPublisher(for: request)
                 .map { (data, response) in data }
+                .mapError { NetworkError.customError($0) }
                 .sink(receiveCompletion: { completion in
                     if case let .failure(error) = completion {
-                        promise(.failure(NetworkError.customError(error)))
+                        promise(.failure(error))
                     }
                 }, receiveValue: { data in
                     promise(.success(data))

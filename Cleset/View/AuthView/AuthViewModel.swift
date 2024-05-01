@@ -18,6 +18,7 @@ final class AuthViewModel: ObservableObject {
         case checkAuthenticatedState
         case login
         case fetchUserData
+        case logout
     }
     
     private let container: DIContainer
@@ -55,13 +56,20 @@ final class AuthViewModel: ObservableObject {
                     }.store(in: &subscriptions)
 
             case .fetchUserData:
-                guard let idToken = UserManager.getIdToken() else { return }
                 container.services.userService.getUserData()
                     .receive(on: DispatchQueue.main)
                     .sink { completion in
                     } receiveValue: { [weak self] user in
                         UserManager.setUserData(with: user)
                         self?.authenticatedState = .authenticated
+                        self?.authenticatedChecked = true
+                    }.store(in: &subscriptions)
+                
+            case .logout:
+                container.services.authService.logout()
+                    .sink { completion in
+                    } receiveValue: { [weak self] _ in
+                        self?.authenticatedState = .unauthenticated
                         self?.authenticatedChecked = true
                     }.store(in: &subscriptions)
 

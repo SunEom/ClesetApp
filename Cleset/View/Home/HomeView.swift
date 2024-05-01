@@ -116,7 +116,7 @@ struct HomeView: View {
                 .buttonStyle(PlainButtonStyle())
                 
                 Rectangle()
-                    .fill(Color.lightGray)
+                    .fill(Color.gray0)
                     .frame(height: 1)
             }
         }
@@ -210,7 +210,7 @@ struct HomeView: View {
             .frame(height: 50)
             
             Rectangle()
-                .fill(Color.lightGray)
+                .fill(Color.gray0)
                 .frame(height: 1)
         }
         

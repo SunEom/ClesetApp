@@ -16,17 +16,7 @@ struct DetailView: View {
     
     var body: some View {
         VStack {
-            HStack {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .renderingMode(.template)
-                        .foregroundStyle(Color.mainGreen)
-                }
-                
-                Spacer()
-                
+            NavigationHeader {
                 Button {
                     
                 } label: {
@@ -35,8 +25,6 @@ struct DetailView: View {
                         .frame(width: 20, height: 20)
                 }
             }
-            .padding(.horizontal, 20)
-            .frame(minWidth: UIScreen.main.bounds.width, minHeight: 50, maxHeight: 50)
             
             ScrollView {
                 VStack(alignment: .leading, spacing: .zero) {

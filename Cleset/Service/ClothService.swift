@@ -8,120 +8,84 @@
 import Foundation
 import Combine
 
-enum ClothServiceError: Error {
-    case networkError(Error)
-}
-
 protocol ClothServiceType {
-    func getClothList() -> AnyPublisher<[ClothObject], ClothServiceError>
-    func toggleFavorite(clothId: Int, favorite: Int) -> AnyPublisher<Void, ClothServiceError>
-    func getClothGroupList() -> AnyPublisher<[ClothGroupObject], ClothServiceError>
-    func createNewGroup(groupName: String) -> AnyPublisher<Void, ClothServiceError>
-    func getSeasonCloth(season: Season) -> AnyPublisher<[ClothObject], ClothServiceError>
-    func getCategoryCloth(category: Category) -> AnyPublisher<[ClothObject], ClothServiceError>
-    func getGroupCloth(group: ClothGroupObject) -> AnyPublisher<[ClothObject], ClothServiceError>
-    func addToGroup(cloth: ClothObject, to group: ClothGroupObject) -> AnyPublisher<Void, ClothServiceError>
+    func getClothList() -> AnyPublisher<[ClothObject], ServiceError>
+    func toggleFavorite(clothId: Int, favorite: Int) -> AnyPublisher<Void, ServiceError>
+    func getSeasonCloth(season: Season) -> AnyPublisher<[ClothObject], ServiceError>
+    func getCategoryCloth(category: Category) -> AnyPublisher<[ClothObject], ServiceError>
+    func getGroupCloth(group: ClothGroupObject) -> AnyPublisher<[ClothObject], ServiceError>
 }
 
 final class ClothService: ClothServiceType {
     
     let clothRepository: ClothRepository = ClothNetworkRepository()
     
-    func getClothList() -> AnyPublisher<[ClothObject], ClothServiceError> {
+    func getClothList() -> AnyPublisher<[ClothObject], ServiceError> {
         return clothRepository.getClothList()
-            .mapError { ClothServiceError.networkError($0) }
+            .mapError { ServiceError.error($0) }
             .eraseToAnyPublisher()
     }
     
-    func toggleFavorite(clothId: Int, favorite: Int) -> AnyPublisher<Void, ClothServiceError> {
+    func toggleFavorite(clothId: Int, favorite: Int) -> AnyPublisher<Void, ServiceError> {
         return clothRepository.toggleFavorite(
             clothId: clothId,
             favorite: favorite
         )
-        .mapError { ClothServiceError.networkError($0) }
+        .mapError { ServiceError.error($0) }
         .eraseToAnyPublisher()
     }
     
-    func getClothGroupList() -> AnyPublisher<[ClothGroupObject], ClothServiceError> {
-        return clothRepository
-            .getClothGroupList()
-            .mapError { ClothServiceError.networkError($0) }
-            .eraseToAnyPublisher()
-    }
-    
-    func createNewGroup(groupName: String) -> AnyPublisher<Void, ClothServiceError> {
-        return clothRepository.createNewGroup(groupName: groupName)
-            .mapError { ClothServiceError.networkError($0) }
-            .eraseToAnyPublisher()
-    }
-    
-    func getSeasonCloth(season: Season) -> AnyPublisher<[ClothObject], ClothServiceError> {
+    func getSeasonCloth(season: Season) -> AnyPublisher<[ClothObject], ServiceError> {
         return clothRepository.getSeasonCloth(season: season)
-            .mapError { ClothServiceError.networkError($0)}
+            .mapError { ServiceError.error($0)}
             .eraseToAnyPublisher()
     }
     
-    func getCategoryCloth(category: Category) -> AnyPublisher<[ClothObject], ClothServiceError> {
+    func getCategoryCloth(category: Category) -> AnyPublisher<[ClothObject], ServiceError> {
         return clothRepository.getCategoryCloth(category: category)
-            .mapError { ClothServiceError.networkError($0)}
+            .mapError { ServiceError.error($0)}
             .eraseToAnyPublisher()
     }
     
-    func getGroupCloth(group: ClothGroupObject) -> AnyPublisher<[ClothObject], ClothServiceError> {
+    func getGroupCloth(group: ClothGroupObject) -> AnyPublisher<[ClothObject], ServiceError> {
         return clothRepository.getGroupCloth(group: group)
-            .mapError { ClothServiceError.networkError($0)}
+            .mapError { ServiceError.error($0)}
             .eraseToAnyPublisher()
     }
     
-    func addToGroup(cloth: ClothObject, to group: ClothGroupObject) -> AnyPublisher<Void, ClothServiceError> {
-        return clothRepository.addToGroup(cloth: cloth, to: group)
-            .mapError { ClothServiceError.networkError($0)}
-            .eraseToAnyPublisher()
-    }
+    
 }
 
 final class StubClothService: ClothServiceType {
-    func getClothList() -> AnyPublisher<[ClothObject], ClothServiceError> {
+    func getClothList() -> AnyPublisher<[ClothObject], ServiceError> {
         return Just(ClothObject.stubList)
-            .setFailureType(to: ClothServiceError.self)
+            .setFailureType(to: ServiceError.self)
             .eraseToAnyPublisher()
     }
     
-    func toggleFavorite(clothId: Int, favorite: Int) -> AnyPublisher<Void, ClothServiceError> {
+    func toggleFavorite(clothId: Int, favorite: Int) -> AnyPublisher<Void, ServiceError> {
         return Empty().eraseToAnyPublisher()
     }
     
-    func getClothGroupList() -> AnyPublisher<[ClothGroupObject], ClothServiceError> {
-        return Just(ClothGroupObject.stubList)
-            .setFailureType(to: ClothServiceError.self)
-            .eraseToAnyPublisher()
-    }
-    
-    func createNewGroup(groupName: String) -> AnyPublisher<Void, ClothServiceError> {
-        return Empty().eraseToAnyPublisher()
-    }
-    
-    func getSeasonCloth(season: Season) -> AnyPublisher<[ClothObject], ClothServiceError> {
+    func getSeasonCloth(season: Season) -> AnyPublisher<[ClothObject], ServiceError> {
         return Just(ClothObject.stubList)
             .map { $0.filter { $0.season.contains(season.displayName) }}
-            .setFailureType(to: ClothServiceError.self)
+            .setFailureType(to: ServiceError.self)
             .eraseToAnyPublisher()
     }
     
-    func getCategoryCloth(category: Category) -> AnyPublisher<[ClothObject], ClothServiceError> {
+    func getCategoryCloth(category: Category) -> AnyPublisher<[ClothObject], ServiceError> {
         return Just(ClothObject.stubList)
             .map { $0.filter { $0.category.contains(category.rawValue) }}
-            .setFailureType(to: ClothServiceError.self)
+            .setFailureType(to: ServiceError.self)
             .eraseToAnyPublisher()
     }
     
-    func getGroupCloth(group: ClothGroupObject) -> AnyPublisher<[ClothObject], ClothServiceError> {
+    func getGroupCloth(group: ClothGroupObject) -> AnyPublisher<[ClothObject], ServiceError> {
         return Just(group.folderId == 1 ? ClothObject.stubList : [])
-            .setFailureType(to: ClothServiceError.self)
+            .setFailureType(to: ServiceError.self)
             .eraseToAnyPublisher()
     }
     
-    func addToGroup(cloth: ClothObject, to group: ClothGroupObject) -> AnyPublisher<Void, ClothServiceError> {
-        return Empty().eraseToAnyPublisher()
-    }
+    
 }

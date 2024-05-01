@@ -31,7 +31,7 @@ final class GroupListViewModel: ObservableObject {
         switch action {
             case .fetchGroupList:
                 loading = true
-                container.services.clothService.getClothGroupList()
+                container.services.groupService.getClothGroupList()
                     .receive(on: DispatchQueue.main)
                     .sink { [weak self] completion in
                         self?.loading = false
@@ -41,7 +41,7 @@ final class GroupListViewModel: ObservableObject {
                 
             case let .creatNewGroup(groupName):
                 loading = true
-                container.services.clothService.createNewGroup(groupName: groupName)
+                container.services.groupService.createNewGroup(groupName: groupName)
                     .receive(on: DispatchQueue.main)
                     .sink { completion in
                     } receiveValue: { [weak self]  _ in
@@ -50,7 +50,7 @@ final class GroupListViewModel: ObservableObject {
                 
             case let .addToGroup(group):
                 loading = true
-                container.services.clothService.addToGroup(cloth: clothItem, to: group)
+                container.services.groupService.addToGroup(cloth: clothItem, to: group)
                     .receive(on: DispatchQueue.main)
                     .sink { completion in
                     } receiveValue: { [weak self]  _ in

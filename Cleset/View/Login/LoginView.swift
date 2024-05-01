@@ -18,18 +18,19 @@ struct LoginView: View {
             
             VStack {
                 
-                Image("logo3")
-                    .resizable()
-                    .aspectRatio(1, contentMode: .fit)
-                    
                 Spacer()
                 
+                Image("logo1")
+                    .resizable()
+                    .frame(width: 400, height: 400)
+                    
                 GoogleSignInButton(
                     scheme: .light,
                     style: .wide,
                     action: {
                         authViewModel.send(.login)
                     })
+                
                 .frame(width: 200, height: 60, alignment: .center)
                 
                 Spacer()

@@ -16,12 +16,13 @@ enum AuthServiceError: Error {
     case tokenError
     case userNotFoundError
     case customError(Error)
+    case signOutError(Error)
 }
 
 protocol AuthServiceType {
     func checkLoginState() -> AnyPublisher<Bool, AuthServiceError>
     func login() -> AnyPublisher<Void, AuthServiceError>
-    
+    func logout() -> AnyPublisher<Void, AuthServiceError>
 }
 
 final class AuthService: AuthServiceType {
@@ -75,7 +76,7 @@ final class AuthService: AuthServiceType {
             GIDSignIn.sharedInstance.signIn(withPresenting: presentingView) { signInResult, error in
                 
                 guard let user = signInResult?.user,
-                      let idToken = user.idToken?.tokenString 
+                      let idToken = user.idToken?.tokenString
                 else {
                     promise(.failure(AuthServiceError.userDataError))
                     return
@@ -115,6 +116,19 @@ final class AuthService: AuthServiceType {
         
     }
     
+    func logout() -> AnyPublisher<Void, AuthServiceError> {
+        Future { promise in
+            let firebaseAuth = Auth.auth()
+            do {
+                try firebaseAuth.signOut()
+                promise(.success(()))
+            } catch let signOutError as NSError {
+                promise(.failure(AuthServiceError.signOutError(signOutError)))
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+    
 }
 
 final class StubAuthService: AuthServiceType {
@@ -122,13 +136,18 @@ final class StubAuthService: AuthServiceType {
         return Empty().eraseToAnyPublisher()
     }
     
+    func getUserData(idToken: String) -> AnyPublisher<UserObject, AuthServiceError> {
+        return Empty().eraseToAnyPublisher()
+    }
+    
     func login() -> AnyPublisher<Void, AuthServiceError> {
         return Empty().eraseToAnyPublisher()
     }
     
-    func getUserData(idToken: String) -> AnyPublisher<UserObject, AuthServiceError> {
+    func logout() -> AnyPublisher<Void, AuthServiceError> {
         return Empty().eraseToAnyPublisher()
     }
 }
+
 
 

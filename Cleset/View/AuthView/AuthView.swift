@@ -25,6 +25,7 @@ struct AuthView: View {
                 switch viewModel.authenticatedState {
                     case .authenticated:
                         MainTabView()
+                            .environmentObject(viewModel)
                     case .unauthenticated:
                         LoginView(authViewModel: viewModel)
                 }

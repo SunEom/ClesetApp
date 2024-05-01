@@ -30,7 +30,7 @@ struct MainTabView: View {
                     }
                     
                 case .profile:
-                    ProfileView()
+                    ProfileView(viewModel: ProfileViewModel())
             }
             
             Spacer()

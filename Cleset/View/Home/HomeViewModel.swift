@@ -47,7 +47,7 @@ final class HomeViewModel: ObservableObject {
                 
             case .fetchClothGroups:
                 loading = true
-                container.services.clothService.getClothGroupList()
+                container.services.groupService.getClothGroupList()
                     .receive(on: DispatchQueue.main)
                     .sink { [weak self] completion in
                         self?.loading = false

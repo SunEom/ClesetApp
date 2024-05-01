@@ -12,7 +12,7 @@ class UserManager {
     private init() {}
     
     private static var idToken: String?
-    private static var userData: UserObject?
+    private static var userData: UserModel?
     
     static func setIdToken(_ token: String) {
         UserManager.idToken = token
@@ -22,11 +22,11 @@ class UserManager {
         return UserManager.idToken
     }
     
-    static func setUserData(with data: UserObject) {
+    static func setUserData(with data: UserModel) {
         self.userData = data
     }
     
-    static func getUserData() -> UserObject? {
+    static func getUserData() -> UserModel? {
         return self.userData
     }
     

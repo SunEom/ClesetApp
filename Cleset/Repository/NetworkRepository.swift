@@ -10,6 +10,7 @@ import Combine
 import Firebase
 
 enum NetworkError: Error {
+    case notFBLogin
     case encodingError
     case urlError
     case urlRequestError

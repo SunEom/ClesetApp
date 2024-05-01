@@ -58,7 +58,13 @@ final class AuthViewModel: ObservableObject {
             case .fetchUserData:
                 container.services.userService.getUserData()
                     .receive(on: DispatchQueue.main)
-                    .sink { completion in
+                    .sink {[weak self] completion in
+                        switch completion {
+                            case .failure:
+                                self?.send(.logout)
+                            default:
+                                break
+                        }
                     } receiveValue: { [weak self] user in
                         UserManager.setUserData(with: user)
                         self?.authenticatedState = .authenticated

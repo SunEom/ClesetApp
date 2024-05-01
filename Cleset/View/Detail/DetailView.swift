@@ -16,15 +16,13 @@ struct DetailView: View {
     
     var body: some View {
         VStack {
-            NavigationHeader {
-                Button {
-                    
-                } label: {
-                    Image("edit")
-                        .resizable()
-                        .frame(width: 20, height: 20)
-                }
-            }
+            NavigationHeader(button: Button {
+                
+            } label: {
+                Image("edit")
+                    .resizable()
+                    .frame(width: 20, height: 20)
+            })
             
             ScrollView {
                 VStack(alignment: .leading, spacing: .zero) {

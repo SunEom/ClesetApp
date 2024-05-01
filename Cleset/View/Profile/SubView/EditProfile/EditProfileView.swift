@@ -16,21 +16,21 @@ struct EditProfileView: View {
     
     var body: some View {
         VStack {
-            NavigationHeader {
-                Button {
+            NavigationHeader(
+                button: Button {
                     viewModel.send(.updateButtonTap(nickname: nickname, gender: gender, age: age))
                 } label: {
                     Text("저장")
                 }
-                .buttonStyle(PlainButtonStyle())
-            }
+                    .buttonStyle(PlainButtonStyle())
+            )
             
             ScrollView {
                 VStack(alignment: .leading) {
-                    Text("닉네임")
-                    HStack {
-                        nicknameInput
-                    }
+                    
+                    
+                    nicknameInput
+                    
                     
                     genderInput
                     
@@ -57,43 +57,46 @@ struct EditProfileView: View {
     }
     
     var nicknameInput: some View {
-        Group {
-            VStack(spacing: 2) {
-                if #available(iOS 17.0, *) {
-                    TextField(text: $nickname) {
+        VStack(alignment: .leading) {
+            Text("닉네임")
+            HStack {
+                VStack(spacing: 2) {
+                    if #available(iOS 17.0, *) {
+                        TextField(text: $nickname) {
+                        }
+                        .padding(.horizontal, 10)
+                        .frame(height: 30)
+                        .clipShape(RoundedRectangle(cornerRadius: 3))
+                        .onChange(of: nickname) {
+                            viewModel.send(.nicknameChanged($1))
+                        }
+                    } else {
+                        TextField(text: $nickname) {
+                        }
+                        .padding(.horizontal, 10)
+                        .frame(height: 30)
+                        .clipShape(RoundedRectangle(cornerRadius: 3))
+                        .onChange(of: nickname, perform: { value in
+                            viewModel.send(.nicknameChanged(value))
+                        })
                     }
-                    .padding(.horizontal, 10)
-                    .frame(height: 30)
-                    .clipShape(RoundedRectangle(cornerRadius: 3))
-                    .onChange(of: nickname) {
-                        viewModel.send(.nicknameChanged($1))
-                    }
-                } else {
-                    TextField(text: $nickname) {
-                    }
-                    .padding(.horizontal, 10)
-                    .frame(height: 30)
-                    .clipShape(RoundedRectangle(cornerRadius: 3))
-                    .onChange(of: nickname, perform: { value in
-                        viewModel.send(.nicknameChanged(value))
-                    })
+                    
+                    Rectangle()
+                        .fill(Color.gray0)
+                        .frame(height: 1)
                 }
                 
-                Rectangle()
-                    .fill(Color.gray0)
-                    .frame(height: 1)
-            }
-            
-            
-            Button {
-                viewModel.send(.nicknameCheckButtonTap(nickname))
-            } label: {
-                Text("중복확인")
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(Color.white)
-                    .padding(10)
-                    .background(Color.mainGreen)
-                    .clipShape(RoundedRectangle(cornerRadius: 5))
+                
+                Button {
+                    viewModel.send(.nicknameCheckButtonTap(nickname))
+                } label: {
+                    Text("중복확인")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(Color.white)
+                        .padding(10)
+                        .background(Color.mainGreen)
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                }
             }
         }
     }

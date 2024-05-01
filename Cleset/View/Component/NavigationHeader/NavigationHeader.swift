@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NavigationHeader<Content: View>: View {
     @Environment(\.dismiss) var dismiss
-    var button: (() -> Content)?
+    var button: Content?
     var title: String = ""
     var body: some View {
         HStack {
@@ -24,7 +24,7 @@ struct NavigationHeader<Content: View>: View {
             Text(title)
                 .font(.system(size: 17, weight: .bold))
             Spacer()
-            button?()
+            button
         }
         .padding(.horizontal, 20)
         .frame(minWidth: UIScreen.main.bounds.width, minHeight: 50, maxHeight: 50)

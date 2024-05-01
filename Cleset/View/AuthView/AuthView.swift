@@ -27,7 +27,7 @@ struct AuthView: View {
                         MainTabView()
                             .environmentObject(viewModel)
                     case .unauthenticated:
-                        LoginView(authViewModel: viewModel)
+                        LoginView(viewModel: LoginViewModel(container: container, authViewModel: viewModel))
                 }
             }
         }

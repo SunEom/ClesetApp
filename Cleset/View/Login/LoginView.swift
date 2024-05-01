@@ -10,7 +10,7 @@ import GoogleSignInSwift
 
 struct LoginView: View {
     @EnvironmentObject var container: DIContainer
-    @StateObject var authViewModel: AuthViewModel
+    @StateObject var viewModel: LoginViewModel
     
     var body: some View {
         HStack {
@@ -28,7 +28,7 @@ struct LoginView: View {
                     scheme: .light,
                     style: .wide,
                     action: {
-                        authViewModel.send(.login)
+                        viewModel.send(.FBGoogleLogin)
                     })
                 
                 .frame(width: 200, height: 60, alignment: .center)
@@ -40,10 +40,14 @@ struct LoginView: View {
             Spacer()
         }
         .background(Color.logoBg)
-        
+        .fullScreenCover(isPresented: $viewModel.userNeedToSignUp) {
+            VStack {
+                SignUpView(viewModel: SignUpViewModel(container: container))
+            }
+        }
     }
 }
 
 #Preview {
-    LoginView(authViewModel: AuthViewModel(container: DIContainer.stub))
+    LoginView(viewModel: LoginViewModel(container: .stub, authViewModel: AuthViewModel(container: .stub)))
 }

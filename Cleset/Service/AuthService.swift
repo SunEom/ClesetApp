@@ -96,7 +96,6 @@ final class AuthService: AuthServiceType {
                             if let error {
                                 promise(.failure(AuthServiceError.customError(error)))
                             }
-                            
                             if let token = token {
                                 UserManager.setIdToken(token)
                                 promise(.success(()))
@@ -133,10 +132,6 @@ final class AuthService: AuthServiceType {
 
 final class StubAuthService: AuthServiceType {
     func checkLoginState() -> AnyPublisher<Bool, AuthServiceError> {
-        return Empty().eraseToAnyPublisher()
-    }
-    
-    func getUserData(idToken: String) -> AnyPublisher<UserObject, AuthServiceError> {
         return Empty().eraseToAnyPublisher()
     }
     

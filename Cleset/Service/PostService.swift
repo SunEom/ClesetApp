@@ -10,6 +10,7 @@ import Combine
 
 protocol PostServiceType {
     func getMyPost() -> AnyPublisher<[Post], ServiceError>
+    func fetchPostsWithBoardType(with type: BoardType) -> AnyPublisher<[Post], ServiceError>
 }
 
 final class PostService: PostServiceType {
@@ -22,10 +23,23 @@ final class PostService: PostServiceType {
             .mapError { ServiceError.error($0) }
             .eraseToAnyPublisher()
     }
+    
+    func fetchPostsWithBoardType(with type: BoardType) -> AnyPublisher<[Post], ServiceError> {
+        return postRepository
+            .fetchPostsWithBoardType(with: type)
+            .mapError { ServiceError.error($0) }
+            .eraseToAnyPublisher()
+    }
 }
 
 final class StubPostService: PostServiceType {
     func getMyPost() -> AnyPublisher<[Post], ServiceError> {
+        return Just(Post.stubList)
+            .setFailureType(to: ServiceError.self)
+            .eraseToAnyPublisher()
+    }
+    
+    func fetchPostsWithBoardType(with type: BoardType) -> AnyPublisher<[Post], ServiceError> {
         return Just(Post.stubList)
             .setFailureType(to: ServiceError.self)
             .eraseToAnyPublisher()

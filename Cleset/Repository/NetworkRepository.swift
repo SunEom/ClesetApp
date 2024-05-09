@@ -37,11 +37,16 @@ class NetworkRepository {
     
     //MARK: - GET
     
-    func fetchData(from url: URL) -> AnyPublisher<Data, NetworkError> {
-        return URLSession.shared.dataTaskPublisher(for: url)
-            .map { (data, response) in data }
-            .mapError { _ in NetworkError.urlError }
-            .eraseToAnyPublisher()
+    func fetchData(withPath path: String) -> AnyPublisher<Data, NetworkError> {
+        if let url = self.createURL(withPath: path) {
+            return URLSession.shared.dataTaskPublisher(for: url)
+                .map { (data, response) in data }
+                .mapError { _ in NetworkError.urlError }
+                .eraseToAnyPublisher()
+        } else {
+            return Fail(error: NetworkError.urlError)
+                .eraseToAnyPublisher()
+        }
     }
     
     //MARK: - POST
@@ -71,7 +76,6 @@ class NetworkRepository {
             guard let self = self else { return }
             
             guard let idToken = UserManager.getIdToken() else {
-                print("asdr")
                 promise(.failure(NetworkError.tokenError))
                 return
             }

@@ -23,7 +23,10 @@ struct MainTabView: View {
             
             switch selectedTab {
                 case .board:
-                    BoardView()
+                    NavigationStack {
+                        BoardListView()
+                    }
+                    
                 case .home:
                     NavigationStack {
                         HomeView(viewModel: HomeViewModel(container: container))
@@ -36,6 +39,7 @@ struct MainTabView: View {
             Spacer()
             tabbar
         }
+        .ignoresSafeArea(.keyboard)
     }
     
     var tabbar: some View {
@@ -87,6 +91,7 @@ struct MainTabView: View {
                 .ignoresSafeArea(edges: .bottom)
         )
         .padding(.bottom, -15)
+        
     }
     
 }

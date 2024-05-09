@@ -14,11 +14,19 @@ enum PostRepositoryError: Error {
 
 protocol PostRepository {
     func getMyPosts() -> AnyPublisher<[Post], PostRepositoryError>
+    func fetchPostsWithBoardType(with type: BoardType) -> AnyPublisher<[Post], PostRepositoryError>
 }
 
 final class NetworkPostRepository: NetworkRepository, PostRepository {
     func getMyPosts() -> AnyPublisher<[Post], PostRepositoryError> {
         return postData(withPath: "mypage/post")
+            .decode(type: [Post].self, decoder: JSONDecoder())
+            .mapError { PostRepositoryError.customError($0) }
+            .eraseToAnyPublisher()
+    }
+    
+    func fetchPostsWithBoardType(with type: BoardType) -> AnyPublisher<[Post], PostRepositoryError> {
+        return fetchData(withPath: "post/\(type.typeString)")
             .decode(type: [Post].self, decoder: JSONDecoder())
             .mapError { PostRepositoryError.customError($0) }
             .eraseToAnyPublisher()

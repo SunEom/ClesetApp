@@ -13,6 +13,7 @@ protocol ServiceType {
     var clothService: ClothServiceType { get set }
     var groupService: GroupServiceType { get set }
     var postService: PostServiceType { get set }
+    var commentService: CommentServiceType { get set }
 }
 
 final class Services: ServiceType {
@@ -21,19 +22,22 @@ final class Services: ServiceType {
     var clothService: ClothServiceType
     var groupService: GroupServiceType
     var postService: PostServiceType
+    var commentService: CommentServiceType
     
     init(
         authService: AuthServiceType = AuthService(),
         userService: UserServiceType = UserService(),
         clothService: ClothServiceType = ClothService(),
         groupService: GroupServiceType = GroupService(),
-        postService: PostServiceType = PostService()
+        postService: PostServiceType = PostService(),
+        commentService: CommentServiceType = CommentService()
     ) {
         self.authService = authService
         self.userService = userService
         self.clothService = clothService
         self.groupService = groupService
         self.postService = postService
+        self.commentService = commentService
     }
 }
 
@@ -43,4 +47,5 @@ final class StubService: ServiceType {
     var clothService: ClothServiceType = StubClothService()
     var groupService: GroupServiceType = StubGroupService()
     var postService: PostServiceType = StubPostService()
+    var commentService: CommentServiceType = StubCommentService()
 }

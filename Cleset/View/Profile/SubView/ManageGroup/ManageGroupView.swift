@@ -30,7 +30,6 @@ struct ManageGroupView: View {
                                 Text(group.folderName)
                                 Spacer()
                                 Button {
-                                    print("tap")
                                     selectedGroup = group
                                     newGroupName = group.folderName
                                     presentingEditView = true

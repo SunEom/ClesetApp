@@ -12,7 +12,6 @@ struct ClothCell: View {
     @ObservedObject var viewModel: ClothCellViewModel
     
     var body: some View {
-        
         HStack(spacing: .zero) {
             KFImage(viewModel.clothData.imageUrl)
                 .resizable()

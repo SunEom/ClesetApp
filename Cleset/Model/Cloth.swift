@@ -121,7 +121,7 @@ struct ClothObject: Decodable {
     
     var displayDate: String {
         get {
-            createdDate == updatedDate ? createdDate.getFormattedData() : updatedDate.getFormattedData() + "(수정됨)"
+            createdDate == updatedDate ? createdDate.getFormattedDate() : updatedDate.getFormattedDate() + "(수정됨)"
         }
     }
     

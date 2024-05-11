@@ -13,52 +13,49 @@ struct PostCell: View {
     @StateObject var viewModel: PostCellViewModel
     
     var body: some View {
-        NavigationLink {
-            PostView(viewModel: PostViewModel(container: container, postData: viewModel.postData))
-        } label: {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(viewModel.postData.title)
-                        .font(.system(size: 16, weight: .semibold))
-                    HStack {
-                        Text(viewModel.postData.nickname)
-                            .font(.system(size: 12))
-                        
-                        if let commentCount =  viewModel.postData.commentCount {
-                            HStack(spacing: 3) {
-                                Image("dot")
-                                    .resizable()
-                                    .frame(width: 6, height: 6)
-                                    .padding(.trailing, 5)
-                                 
-                                Image("commentBubble")
-                                    .resizable()
-                                    .frame(width: 13, height: 13)
-                                
-                                Text("\(commentCount)")
-                                    .font(.system(size: 12))
-                            }
+        
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(viewModel.postData.title)
+                    .font(.system(size: 16, weight: .semibold))
+                HStack {
+                    Text(viewModel.postData.nickname)
+                        .font(.system(size: 12))
+                    
+                    if let commentCount =  viewModel.postData.commentCount {
+                        HStack(spacing: 3) {
+                            Image("dot")
+                                .resizable()
+                                .frame(width: 6, height: 6)
+                                .padding(.trailing, 5)
+                             
+                            Image("commentBubble")
+                                .resizable()
+                                .frame(width: 13, height: 13)
                             
+                            Text("\(commentCount)")
+                                .font(.system(size: 12))
                         }
                         
                     }
+                    
                 }
-                
-                Spacer()
-                    .frame(minWidth: 50)
-                
-                if let imageURL = viewModel.postData.imageURL {
-                    KFImage(imageURL)
-                        .resizable()
-                        .frame(width: 50, height: 50)
-                        .clipShape(RoundedRectangle(cornerRadius: 5))
-                }
-                
             }
-            .padding(.horizontal, 20)
-            .frame(height: 60)
+            
+            Spacer()
+                .frame(minWidth: 50)
+            
+            if let imageURL = viewModel.postData.imageURL {
+                KFImage(imageURL)
+                    .resizable()
+                    .frame(width: 50, height: 50)
+                    .clipShape(RoundedRectangle(cornerRadius: 5))
+            }
+            
         }
-        .buttonStyle(PlainButtonStyle())
+        .padding(.horizontal, 20)
+        .frame(height: 60)
+
     }
 }
 

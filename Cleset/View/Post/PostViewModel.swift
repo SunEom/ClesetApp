@@ -12,8 +12,10 @@ final class PostViewModel: ObservableObject {
     
     private let container: DIContainer
     private var subscriptions: Set<AnyCancellable> = Set<AnyCancellable>()
-    let postData: Post
+    @Published var postData: Post
     @Published var comments: [Comment] = []
+    @Published var favorite: Bool = false
+    @Published var favoriteCount: Int = 0
     
     init(container: DIContainer, postData: Post) {
         self.container = container
@@ -22,6 +24,7 @@ final class PostViewModel: ObservableObject {
     
     enum Action {
         case fetchComments
+        case fetchPostDetail
     }
     
     func send(_ action: Action) {
@@ -33,6 +36,17 @@ final class PostViewModel: ObservableObject {
                     .sink { completion in
                     } receiveValue: { [weak self] comments in
                         self?.comments = comments
+                    }.store(in: &subscriptions)
+                
+            case .fetchPostDetail:
+                container.services.postService
+                    .fetchPostDetail(postId: postData.postId)
+                    .receive(on: DispatchQueue.main)
+                    .sink { completion in
+                    } receiveValue: { [weak self] postDetail in
+                        self?.postData = postDetail.post
+                        self?.favorite = postDetail.favoriteBool
+                        self?.favoriteCount = postDetail.favoriteCount
                     }.store(in: &subscriptions)
 
         }

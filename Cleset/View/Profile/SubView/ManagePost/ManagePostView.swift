@@ -9,6 +9,7 @@ import SwiftUI
 
 
 struct ManagePostView: View {
+    @EnvironmentObject var container: DIContainer
     @StateObject var viewModel: ManagePostViewModel
     
     var body: some View {
@@ -16,12 +17,12 @@ struct ManagePostView: View {
             NavigationHeader<AnyView>(title: "게시글 관리")
             ScrollView {
                 LazyVStack(spacing: .zero) {
-                    ForEach(viewModel.postCellViewModels, id: \.postData.postId) { viewModel in
+                    ForEach(viewModel.postCellViewModels, id: \.postData.postId) { cellViewModel in
                         NavigationLink {
-                            //TODO: 게시글 상세화면으로 이동
+                            PostView(viewModel: PostViewModel(container: container, postData: cellViewModel.postData))
                         } label: {
                             VStack(spacing: .zero) {
-                                PostCell(viewModel: viewModel)
+                                PostCell(viewModel: cellViewModel)
                                 Rectangle()
                                     .fill(Color.gray0)
                                     .frame(height: 1)

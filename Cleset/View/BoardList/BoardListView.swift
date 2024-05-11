@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-enum BoardType: String, CaseIterable {
+enum BoardType: String, CaseIterable, Identifiable {
+    var id: Self { self }
     case fashion = "fashion"
     case tip = "tip"
     

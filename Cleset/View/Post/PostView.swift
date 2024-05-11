@@ -14,9 +14,20 @@ struct PostView: View {
     var body: some View {
         VStack(alignment: .leading) {
             NavigationHeader(
-                button: viewModel.postData.id == 1 ?
-                Button("수정") {}
-                    .buttonStyle(PlainButtonStyle())
+                button: viewModel.postData.userId == UserManager.getUserData()?.id ?
+                NavigationLink(destination: {
+                    WritePostView(viewModel:
+                                    WritePostViewModel(
+                                        container: container,
+                                        boardType: viewModel.postData.boardType,
+                                        postData: viewModel.postData
+                                    )
+                    ).onDisappear {
+                        viewModel.send(.fetchPostDetail)
+                    }
+                }, label: {
+                    Text("수정")
+                })
                 : nil
             )
             ScrollView {
@@ -98,7 +109,7 @@ struct PostView: View {
                             HStack {
                                 Text(comment.nickname)
                                     .font(.system(size: 14, weight: .semibold))
-                                    
+                                
                                 
                                 Spacer()
                                 
@@ -151,7 +162,7 @@ struct PostView: View {
                         .frame(width: UIScreen.main.bounds.width-50, height: 45)
                         .background(
                             RoundedRectangle(cornerRadius: 10)
-                            .fill(Color.mainGreen)
+                                .fill(Color.mainGreen)
                         )
                 }
                 Spacer()

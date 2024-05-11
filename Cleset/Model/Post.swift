@@ -7,7 +7,8 @@
 
 import Foundation
 
-struct Post: Decodable {
+struct Post: Decodable, Identifiable {
+    let id: String = UUID().uuidString
     let postId: Int
     let title: String
     let genre: String
@@ -15,10 +16,12 @@ struct Post: Decodable {
     let fileName: String?
     let createdDate: String
     let updatedDate: String
-    let id: Int
+    let userId: Int
     let nickname: String
     let commentCount: Int?
-    
+    var boardType: BoardType {
+        return BoardType(rawValue: genre)!
+    }
     var imageURL: URL? {
         get {
             if fileName == nil {
@@ -37,7 +40,7 @@ struct Post: Decodable {
         case fileName = "file_name"
         case createdDate = "created_date"
         case updatedDate = "updated_date"
-        case id
+        case userId = "id"
         case nickname
         case commentCount = "comment_count"
     }
@@ -51,7 +54,7 @@ struct Post: Decodable {
             fileName: "clothImage5.jpeg",
             createdDate: "2022-06-07T00:00:00",
             updatedDate: "2022-06-11T17:50:24",
-            id: 1,
+            userId: 1,
             nickname: "SunEom",
             commentCount: Optional(1)
         ),
@@ -63,11 +66,26 @@ struct Post: Decodable {
             fileName: nil,
             createdDate: "2022-06-06T00:00:00",
             updatedDate: "2022-06-06T00:00:00",
-            id: 1,
+            userId: 1,
             nickname: "SunEom",
             commentCount: Optional(5)
         )
     ]
     
+}
+
+struct PostDetail: Decodable {
+    let post: Post
+    let favorite: Int
+    let favoriteCount: Int
+    var favoriteBool: Bool {
+        return favorite == 1
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case post = "postDto"
+        case favorite
+        case favoriteCount = "favorite_count"
+    }
 }
 

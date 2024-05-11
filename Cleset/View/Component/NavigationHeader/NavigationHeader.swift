@@ -25,6 +25,7 @@ struct NavigationHeader<Content: View>: View {
                 .font(.system(size: 17, weight: .bold))
             Spacer()
             button
+                .buttonStyle(PlainButtonStyle())
         }
         .padding(.horizontal, 20)
         .frame(minWidth: UIScreen.main.bounds.width, minHeight: 50, maxHeight: 50)

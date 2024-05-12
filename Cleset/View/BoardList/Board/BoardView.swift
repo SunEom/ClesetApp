@@ -13,10 +13,16 @@ struct BoardView: View {
     var body: some View {
         VStack {
             NavigationHeader(button: NavigationLink(destination: {
-                WritePostView(viewModel: WritePostViewModel(container: container, boardType: viewModel.boardType))
-                    .onDisappear {
-                        viewModel.send(.fetchPosts)
-                    }
+                WritePostView(
+                    viewModel:
+                        WritePostViewModel(
+                            container: container,
+                            boardType: viewModel.boardType
+                        )
+                )
+                .onDisappear {
+                    viewModel.send(.fetchPosts)
+                }
             }, label: {
                 Text("작성")
             }), title: viewModel.boardType.displayName)
@@ -25,10 +31,15 @@ struct BoardView: View {
                 ForEach(viewModel.postCellViewModels, id: \.postData.id) { cellViewModel in
                     VStack(spacing: .zero) {
                         NavigationLink {
-                            PostView(viewModel: PostViewModel(container: container, postData: cellViewModel.postData))
-                                .onDisappear {
-                                    viewModel.send(.fetchPosts)
-                                }
+                            PostView(
+                                viewModel: PostViewModel(
+                                    container: container,
+                                    postData: cellViewModel.postData
+                                )
+                            )
+                            .onDisappear {
+                                viewModel.send(.fetchPosts)
+                            }
                         } label: {
                             PostCell(viewModel: cellViewModel)
                         }

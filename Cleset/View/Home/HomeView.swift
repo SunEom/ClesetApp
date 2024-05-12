@@ -80,7 +80,7 @@ struct HomeView: View {
                 if
                     (selectedFilter != .group && viewModel.clothes.isEmpty)
                         || (selectedFilter == .group && selectedGroup != nil && viewModel.clothes.isEmpty) {
-                    clothListEmptyView
+                    ClothListEmptyView()
                 } else {
                     myClothList
                 }
@@ -215,22 +215,6 @@ struct HomeView: View {
         }
         
         
-    }
-    
-    var clothListEmptyView: some View {
-        VStack(alignment: .center) {
-            Spacer()
-            Image("hanger")
-                .resizable()
-                .frame(width: 100, height: 100)
-            Group {
-                Text("추가된 의상이 없습니다")
-                Text("의상을 추가해보세요!")
-            }
-            .font(.system(size: 14, weight: .semibold))
-            Spacer()
-            Spacer()
-        }
     }
     
 }

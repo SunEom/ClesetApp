@@ -25,6 +25,7 @@ final class PostViewModel: ObservableObject {
     enum Action {
         case fetchComments
         case fetchPostDetail
+        case favoriteButtonTap
     }
     
     func send(_ action: Action) {
@@ -49,6 +50,16 @@ final class PostViewModel: ObservableObject {
                         self?.favoriteCount = postDetail.favoriteCount
                     }.store(in: &subscriptions)
 
+            case .favoriteButtonTap:
+                container.services.postService
+                    .toggleFavorite(postId: postData.postId, favorite: favorite)
+                    .receive(on: DispatchQueue.main)
+                    .sink { completion in
+                    } receiveValue: { [weak self] postDetail in
+                        self?.postData = postDetail.post
+                        self?.favorite = postDetail.favoriteBool
+                        self?.favoriteCount = postDetail.favoriteCount
+                    }.store(in: &subscriptions)
         }
     }
 }

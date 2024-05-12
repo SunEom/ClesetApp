@@ -7,11 +7,15 @@
 
 import SwiftUI
 
-enum ProfileMenu: CaseIterable {
+
+
+enum ProfileMenu: CaseIterable, MenuItemType {
+    //main
     case editProfile
     case manageGroup
     case managePost
     case manageAccount
+    
     
     var displayName: String {
         get {
@@ -28,17 +32,17 @@ enum ProfileMenu: CaseIterable {
         }
     }
     
-    var imageName: String {
+    var image: Image {
         get {
             switch self {
                 case .editProfile:
-                    "editProfile"
+                    Image("editProfile")
                 case .manageGroup:
-                    "manageGroup"
+                    Image("manageGroup")
                 case .managePost:
-                    "managePost"
+                    Image("managePost")
                 case .manageAccount:
-                    "manageAccount"
+                    Image("manageAccount")
             }
         }
     }
@@ -104,16 +108,16 @@ struct ProfileView: View {
                             EditProfileView(viewModel: EditProfileViewModel(container: container))
                             
                         case .manageGroup:
-                            ManageGroupView(viewModel: ManageGroupViewModel(container: container))
+                            ManageGroupView()
                             
                         case .managePost:
-                            ManagePostView(viewModel: ManagePostViewModel(container: container))
+                            ManagePostView()
                             
                         case .manageAccount:
                             ManageAccountView()
                     }
                 } label: {
-                    ProfileMenuItem(menu: menu)
+                    MenuItem(menu: menu)
                 }
                 .onDisappear {
                     viewModel.send(.updateUserData)
@@ -123,21 +127,7 @@ struct ProfileView: View {
         }
     }
     
-    struct ProfileMenuItem: View {
-        let menu: ProfileMenu
-        var body: some View {
-            HStack(spacing: .zero) {
-                Image(menu.imageName)
-                    .padding(.trailing, 10)
-                Text(menu.displayName)
-                Spacer()
-                Image(systemName: "chevron.right")
-            }
-            .padding(.horizontal, 20)
-            .frame(height: 40)
-            .background(Color.white)
-        }
-    }
+
 }
 
 #Preview {

@@ -58,7 +58,7 @@ final class GroupService: GroupServiceType {
 
 final class StubGroupService: GroupServiceType {
     func getClothGroupList() -> AnyPublisher<[ClothGroupObject], ServiceError> {
-        return Just([])
+        return Just(ClothGroupObject.stubList)
             .setFailureType(to: ServiceError.self)
             .eraseToAnyPublisher()
     }

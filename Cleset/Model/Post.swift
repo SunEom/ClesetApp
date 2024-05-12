@@ -69,6 +69,30 @@ struct Post: Decodable, Identifiable {
             userId: 1,
             nickname: "SunEom",
             commentCount: Optional(5)
+        ),
+        Post(
+            postId: 3,
+            title: "Test Post3",
+            genre: "fashion",
+            postBody: "테스트 포스팅입니다@#",
+            fileName: nil,
+            createdDate: "2022-06-06T00:00:00",
+            updatedDate: "2022-06-06T00:00:00",
+            userId: 2,
+            nickname: "Tester",
+            commentCount: Optional(5)
+        ),
+        Post(
+            postId: 4,
+            title: "Test Post4",
+            genre: "tip",
+            postBody: "테스트 포스팅입니다~~~",
+            fileName: nil,
+            createdDate: "2022-06-06T00:00:00",
+            updatedDate: "2022-06-06T00:00:00",
+            userId: 3,
+            nickname: "TestUser",
+            commentCount: Optional(5)
         )
     ]
     

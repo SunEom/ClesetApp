@@ -13,16 +13,25 @@ enum PostRepositoryError: Error {
 }
 
 protocol PostRepository {
-    func getMyPosts() -> AnyPublisher<[Post], PostRepositoryError>
+    func fetchMyPosts() -> AnyPublisher<[Post], PostRepositoryError>
+    func fetchMyFavoritePosts() -> AnyPublisher<[Post], PostRepositoryError>
     func fetchPostDetail(postId: Int) -> AnyPublisher<PostDetail, PostRepositoryError>
     func fetchPostsWithBoardType(with type: BoardType) -> AnyPublisher<[Post], PostRepositoryError>
     func createNewPost(boardType: BoardType, title: String, postBody: String, imageData: Data?) -> AnyPublisher<Post, PostRepositoryError>
     func updatePost(postId: Int, boardType: BoardType, title: String, postBody: String, imageData: Data?) -> AnyPublisher<Post, PostRepositoryError>
+    func toggleFavorite(postId: Int, favorite: Bool) -> AnyPublisher<PostDetail, PostRepositoryError>
 }
 
 final class NetworkPostRepository: NetworkRepository, PostRepository {
-    func getMyPosts() -> AnyPublisher<[Post], PostRepositoryError> {
+    func fetchMyPosts() -> AnyPublisher<[Post], PostRepositoryError> {
         return postData(withPath: "mypage/post")
+            .decode(type: [Post].self, decoder: JSONDecoder())
+            .mapError { PostRepositoryError.customError($0) }
+            .eraseToAnyPublisher()
+    }
+    
+    func fetchMyFavoritePosts() -> AnyPublisher<[Post], PostRepositoryError> {
+        return postData(withPath: "mypage/favorite_post")
             .decode(type: [Post].self, decoder: JSONDecoder())
             .mapError { PostRepositoryError.customError($0) }
             .eraseToAnyPublisher()
@@ -69,4 +78,15 @@ final class NetworkPostRepository: NetworkRepository, PostRepository {
             .eraseToAnyPublisher()
     }
     
+    func toggleFavorite(postId: Int, favorite: Bool) -> AnyPublisher<PostDetail, PostRepositoryError> {
+        let body: [String: Any] = [
+            "post_id": postId,
+            "favorite": favorite ? 1 : 0
+        ]
+        
+        return postData(withPath: "post/change_favorite", body: body)
+            .decode(type: PostDetail.self, decoder: JSONDecoder())
+            .mapError { PostRepositoryError.customError($0) }
+            .eraseToAnyPublisher()
+    }
 }

@@ -7,15 +7,16 @@
 
 import Foundation
 
-struct ClothGroupObject: Decodable {
+struct ClothGroupObject: Decodable, Identifiable {
+    var id: String = UUID().uuidString
     var folderId: Int
     var folderName: String
-    var id: Int
+    var userId: Int
     
     enum CodingKeys: String, CodingKey {
         case folderId = "folder_id"
         case folderName = "folder_name"
-        case id
+        case userId = "id"
     }
     
     static let stubList: [ClothGroupObject] = [
@@ -23,17 +24,17 @@ struct ClothGroupObject: Decodable {
         ClothGroupObject(
             folderId: 1,
             folderName: "제주도 여행",
-            id: 123
+            userId: 123
         ),
         ClothGroupObject(
             folderId: 2,
             folderName: "졸업식",
-            id: 123
+            userId: 123
         ),
         ClothGroupObject(
             folderId: 3,
             folderName: "강릉",
-            id: 123
+            userId: 123
         ),
     ]
 }

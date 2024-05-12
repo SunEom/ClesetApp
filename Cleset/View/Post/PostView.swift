@@ -37,14 +37,22 @@ struct PostView: View {
                             .font(.system(size: 20, weight: .semibold))
                         Spacer()
                         Button {
-                            
+                            viewModel.send(.favoriteButtonTap)
                         } label: {
-                            Image(systemName: "heart")
-                                .resizable()
-                                .renderingMode(.template)
-                                .foregroundStyle(Color.red)
-                                .frame(width: 22, height: 20)
+                            HStack {
+                                Image(systemName: viewModel.favorite ? "heart.fill" : "heart")
+                                    .resizable()
+                                    .renderingMode(.template)
+                                    .foregroundStyle(Color.red)
+                                    .frame(width: 18, height: 16)
+                                
+                                Text("\(viewModel.favoriteCount)")
+                                    .font(.system(size: 15))
+                                    .foregroundStyle(Color.red)
+                            }
+                            .padding(3)
                         }
+                        .buttonStyle(PlainButtonStyle())
                     }
                     .padding(.vertical, 10)
                     
@@ -84,6 +92,7 @@ struct PostView: View {
         }
         .navigationBarBackButtonHidden()
         .onAppear {
+            viewModel.send(.fetchPostDetail)
             viewModel.send(.fetchComments)
         }
     }
@@ -91,7 +100,12 @@ struct PostView: View {
     var commentSection: some View {
         VStack(alignment: .leading) {
             NavigationLink {
-                CommentListView(viewModel: CommentListViewModel(container: container, postData: viewModel.postData))
+                CommentListView(
+                    viewModel: CommentListViewModel(
+                        container: container,
+                        postData: viewModel.postData
+                    )
+                )
             } label: {
                 HStack {
                     Text("댓글 \(!viewModel.comments.isEmpty ? "(\(viewModel.comments.count))" : "")")

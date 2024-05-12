@@ -7,43 +7,64 @@
 
 import SwiftUI
 
+enum ManagePostMenu: CaseIterable, MenuItemType {
+    var id: Self { self }
+    case myPost
+    case favorite
+    
+    var displayName: String {
+        switch self {
+            case .myPost:
+                "내가 작성한 글"
+            case .favorite:
+                "좋아요 누른 글"
+        }
+        
+    }
+    
+    var image: Image {
+        switch self {
+            case .myPost:
+                Image(systemName: "pencil")
+            case .favorite:
+                Image(systemName: "heart")
+        }
+    }
+    
+}
 
 struct ManagePostView: View {
     @EnvironmentObject var container: DIContainer
-    @StateObject var viewModel: ManagePostViewModel
     
     var body: some View {
         VStack {
             NavigationHeader<AnyView>(title: "게시글 관리")
-            ScrollView {
-                LazyVStack(spacing: .zero) {
-                    ForEach(viewModel.postCellViewModels, id: \.postData.postId) { cellViewModel in
-                        NavigationLink {
-                            PostView(viewModel: PostViewModel(container: container, postData: cellViewModel.postData))
-                        } label: {
-                            VStack(spacing: .zero) {
-                                PostCell(viewModel: cellViewModel)
-                                Rectangle()
-                                    .fill(Color.gray0)
-                                    .frame(height: 1)
-                            }
-                            
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                        
+            
+            VStack {
+                ForEach(ManagePostMenu.allCases, id: \.self) { menu in
+                    NavigationLink {
+                        ManagePostList(
+                            viewModel: ManagePostListViewModel(
+                                container: container,
+                                menu: menu
+                            )
+                        )
+                    } label: {
+                        MenuItem(menu: menu)
                     }
+                    .buttonStyle(PlainButtonStyle())
                 }
+                Spacer()
             }
-            .navigationBarBackButtonHidden()
-            .onAppear {
-                viewModel.send(.fetchMyPosts)
-            }
+            .listStyle(.inset)
         }
-        
+        .navigationBarBackButtonHidden()
     }
     
 }
 
 #Preview {
-    ManagePostView(viewModel: ManagePostViewModel(container: .stub))
+    ManagePostView()
 }
+
+

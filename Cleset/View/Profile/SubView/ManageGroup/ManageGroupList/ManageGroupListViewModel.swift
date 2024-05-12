@@ -1,14 +1,14 @@
 //
-//  ManageGroupViewModel.swift
+//  ManageGroupListViewModel.swift
 //  Cleset
 //
-//  Created by 엄태양 on 4/30/24.
+//  Created by 엄태양 on 5/12/24.
 //
 
 import Foundation
 import Combine
 
-final class ManageGroupViewModel: ObservableObject {
+final class ManageGroupListViewModel: ObservableObject {
     enum Action {
         case fetchGroupList
         case deleteGroup(ClothGroupObject)

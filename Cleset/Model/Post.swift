@@ -95,6 +95,12 @@ struct Post: Decodable, Identifiable {
             commentCount: Optional(5)
         )
     ]
+
+    func filter(searchWord: String) -> Bool {
+        self.title.localizedCaseInsensitiveContains(searchWord) ||
+        self.postBody.localizedCaseInsensitiveContains(searchWord) ||
+        self.nickname.localizedCaseInsensitiveContains(searchWord)
+    }
     
 }
 

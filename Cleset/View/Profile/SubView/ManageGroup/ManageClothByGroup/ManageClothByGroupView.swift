@@ -11,17 +11,23 @@ struct ManageClothByGroupView: View {
     @EnvironmentObject var container: DIContainer
     @State var selectedGroup: ClothGroupObject?
     @StateObject var viewModel: ManageClothByGroupViewModel
+    @State var searchWord: String = ""
     
     var body: some View {
         VStack {
             NavigationHeader<AnyView>(title: ManageGroupMenu.manageClothByGroup.displayName)
             groupHeader
+            
+            SearchBar(searchWord: $searchWord)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 3)
+            
             if selectedGroup != nil && viewModel.clothes.isEmpty {
                 ClothListEmptyView()
             } else {
                 ScrollView {
                     LazyVStack {
-                        ForEach(viewModel.clothes, id: \.clothData.clothId) { viewModel in
+                        ForEach(viewModel.getFilteredList(for: searchWord), id: \.clothData.clothId) { viewModel in
                             NavigationLink {
                                 DetailView(
                                     viewModel: DetailViewModel(

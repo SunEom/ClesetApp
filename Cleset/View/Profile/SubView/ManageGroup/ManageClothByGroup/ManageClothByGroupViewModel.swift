@@ -49,4 +49,14 @@ final class ManageClothByGroupViewModel: ObservableObject {
     private func makeClothViewModels(with clothList: [ClothObject]) -> [ClothCellViewModel] {
         return clothList.map { ClothCellViewModel(clothData: $0, container: self.container)}
     }
+    
+    func getFilteredList(for searchWord: String) -> [ClothCellViewModel] {
+        if searchWord == "" {
+            return self.clothes
+        } else {
+            return self.clothes.filter { viewModel in
+                viewModel.clothData.filter(searchWord: searchWord)
+            }
+        }
+    }
 }

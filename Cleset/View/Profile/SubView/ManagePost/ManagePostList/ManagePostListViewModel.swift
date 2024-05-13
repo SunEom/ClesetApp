@@ -12,7 +12,7 @@ final class ManagePostListViewModel: ObservableObject {
     let menu: ManagePostMenu
     private var subscriptions: Set<AnyCancellable> = Set<AnyCancellable>()
     
-    @Published var posts: [PostCellViewModel] = []
+    @Published var postCellViewModels: [PostCellViewModel] = []
     
     init(container: DIContainer, menu: ManagePostMenu) {
         self.container = container
@@ -34,7 +34,7 @@ final class ManagePostListViewModel: ObservableObject {
                             .sink { completion in
                             } receiveValue: { [weak self] posts in
                                 guard let self = self else { return }
-                                self.posts = posts.map { self.createViewModel(with: $0) }
+                                self.postCellViewModels = posts.map { self.createViewModel(with: $0) }
                             }.store(in: &subscriptions)
                         
                     case .favorite:
@@ -44,7 +44,7 @@ final class ManagePostListViewModel: ObservableObject {
                             .sink { completion in
                             } receiveValue: { [weak self] posts in
                                 guard let self = self else { return }
-                                self.posts = posts.map { self.createViewModel(with: $0)}
+                                self.postCellViewModels = posts.map { self.createViewModel(with: $0)}
                             }.store(in: &subscriptions)
                 }
         }
@@ -52,6 +52,16 @@ final class ManagePostListViewModel: ObservableObject {
     
     private func createViewModel(with post: Post) -> PostCellViewModel {
         return PostCellViewModel(postData: post)
+    }
+    
+    func getFilteredList(for searchWord: String) -> [PostCellViewModel] {
+        if searchWord == "" {
+            return self.postCellViewModels
+        } else {
+            return self.postCellViewModels.filter { viewModel in
+                viewModel.postData.filter(searchWord: searchWord)
+            }
+        }
     }
     
 }

@@ -10,11 +10,17 @@ import SwiftUI
 struct ManagePostList: View {
     @EnvironmentObject var container: DIContainer
     @StateObject var viewModel: ManagePostListViewModel
+    @State var searchWord: String = ""
     
     var body: some View {
         VStack {
             NavigationHeader<AnyView>(title: viewModel.menu.displayName)
-            ForEach(viewModel.posts, id: \.postData.postId) { cellViewModel in
+            
+            SearchBar(searchWord: $searchWord)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 1)
+            
+            ForEach(viewModel.getFilteredList(for: searchWord), id: \.postData.postId) { cellViewModel in
                 NavigationLink {
                     PostView(viewModel: PostViewModel(container: container, postData: cellViewModel.postData))
                 } label: {

@@ -42,4 +42,14 @@ final class BoardViewModel: ObservableObject {
     private func createViewModel(with post: Post) -> PostCellViewModel {
         return PostCellViewModel(postData: post)
     }
+    
+    func getFilteredList(for searchWord: String) -> [PostCellViewModel] {
+        if searchWord == "" {
+            return self.postCellViewModels
+        } else {
+            return self.postCellViewModels.filter { viewModel in
+                viewModel.postData.filter(searchWord: searchWord)
+            }
+        }
+    }
 }

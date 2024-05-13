@@ -35,6 +35,7 @@ enum HomeFilterType: CaseIterable {
 struct HomeView: View {
     @StateObject var viewModel: HomeViewModel
     @EnvironmentObject var container: DIContainer
+    @State var searchWord: String = ""
     @State var selectedFilter: HomeFilterType = .all
     @State var selectedSeason: Season = .spring
     @State var selectedCategory: Category = .shirt
@@ -43,6 +44,7 @@ struct HomeView: View {
     var body: some View {
         VStack(spacing: .zero) {
             header
+            
             listHeader
             
             if selectedFilter == .season {
@@ -70,6 +72,10 @@ struct HomeView: View {
                     }
             }
             
+            SearchBar(searchWord: $searchWord)
+                .padding(.horizontal, 20)
+                .padding(.top, 15)
+            
             if viewModel.loading {
                 VStack {
                     Spacer()
@@ -90,9 +96,7 @@ struct HomeView: View {
         .onAppear {
             viewModel.send(.fetchClothes)
         }
-        
     }
-    
     
     var header: some View {
         HStack {
@@ -160,7 +164,7 @@ struct HomeView: View {
     var myClothList: some View {
         ScrollView {
             LazyVStack {
-                ForEach(viewModel.clothes, id: \.clothData.clothId) { viewModel in
+                ForEach(viewModel.getFilteredList(for: searchWord), id: \.clothData.clothId) { viewModel in
                     NavigationLink {
                         DetailView(
                             viewModel: DetailViewModel(

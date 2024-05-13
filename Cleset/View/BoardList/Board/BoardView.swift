@@ -10,6 +10,8 @@ import SwiftUI
 struct BoardView: View {
     @StateObject var viewModel: BoardViewModel
     @EnvironmentObject var container: DIContainer
+    @State var searchWord: String = ""
+    
     var body: some View {
         VStack {
             NavigationHeader(button: NavigationLink(destination: {
@@ -27,8 +29,12 @@ struct BoardView: View {
                 Text("작성")
             }), title: viewModel.boardType.displayName)
             
+            SearchBar(searchWord: $searchWord)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 1)
+            
             LazyVStack {
-                ForEach(viewModel.postCellViewModels, id: \.postData.id) { cellViewModel in
+                ForEach(viewModel.getFilteredList(for: searchWord), id: \.postData.id) { cellViewModel in
                     VStack(spacing: .zero) {
                         NavigationLink {
                             PostView(

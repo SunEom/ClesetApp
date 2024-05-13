@@ -15,6 +15,7 @@ final class HomeViewModel: ObservableObject {
         case fetchSeasonClothes(Season)
         case fetchCategoryClothes(Category)
         case fetchGroupCloth(ClothGroupObject)
+        case searchButtonTap(String)
         case groupTabSelected
     }
     
@@ -88,6 +89,11 @@ final class HomeViewModel: ObservableObject {
                         self.clothes = self.makeClothViewModels(with: groupClothList)
                     }.store(in: &subscriptions)
                 
+            case let .searchButtonTap(keyword):
+                self.clothes = self.clothes.filter {
+                    $0.clothData.name.contains(keyword)
+                }
+                
             case .groupTabSelected:
                 self.clothes = []
                 
@@ -96,6 +102,16 @@ final class HomeViewModel: ObservableObject {
     
     private func makeClothViewModels(with clothList: [ClothObject]) -> [ClothCellViewModel] {
         return clothList.map { ClothCellViewModel(clothData: $0, container: self.container)}
+    }
+    
+    func getFilteredList(for searchWord: String) -> [ClothCellViewModel] {
+        if searchWord == "" {
+            return self.clothes
+        } else {
+            return self.clothes.filter { viewModel in
+                viewModel.clothData.filter(searchWord: searchWord)
+            }
+        }
     }
     
 }

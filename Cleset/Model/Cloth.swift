@@ -299,4 +299,10 @@ struct ClothObject: Decodable {
             id: 1
         )
     ]
+    
+    func filter(searchWord: String) -> Bool {
+        self.name.localizedCaseInsensitiveContains(searchWord) ||
+        self.brand.localizedCaseInsensitiveContains(searchWord) ||
+        self.clothBody.localizedCaseInsensitiveContains(searchWord)
+    }
 }

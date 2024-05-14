@@ -9,16 +9,58 @@ import Foundation
 import Combine
 
 protocol ClothServiceType {
+    func createNewCloth(name: String, category: Category, brand: String, size: String, place: String, season:[Season], memo: String, imageData: Data?) -> AnyPublisher<ClothObject, ServiceError>
+    func updateCloth(clothId: Int, name: String, category: Category, brand: String, size: String, place: String, season:[Season], memo: String, imageData: Data?) -> AnyPublisher<ClothObject, ServiceError>
+    func fetchClothData(clothId: Int) -> AnyPublisher<ClothObject, ServiceError>
     func getClothList() -> AnyPublisher<[ClothObject], ServiceError>
     func toggleFavorite(clothId: Int, favorite: Int) -> AnyPublisher<Void, ServiceError>
     func getSeasonCloth(season: Season) -> AnyPublisher<[ClothObject], ServiceError>
     func getCategoryCloth(category: Category) -> AnyPublisher<[ClothObject], ServiceError>
     func getGroupCloth(group: ClothGroupObject) -> AnyPublisher<[ClothObject], ServiceError>
+    func deleteCloth(clothId: Int) -> AnyPublisher<Void, ServiceError>
 }
 
 final class ClothService: ClothServiceType {
     
     let clothRepository: ClothRepository = ClothNetworkRepository()
+    
+    func createNewCloth(name: String, category: Category, brand: String, size: String, place: String, season:[Season], memo: String, imageData: Data?) -> AnyPublisher<ClothObject, ServiceError> {
+        return clothRepository.createNewCloth(
+            name: name,
+            category: category,
+            brand: brand,
+            size: size,
+            place: place,
+            season: season,
+            memo: memo,
+            imageData: imageData
+        )
+        .mapError { ServiceError.error($0) }
+        .eraseToAnyPublisher()
+    }
+    
+    func updateCloth(clothId: Int, name: String, category: Category, brand: String, size: String, place: String, season:[Season], memo: String, imageData: Data?) -> AnyPublisher<ClothObject, ServiceError> {
+        return clothRepository.updateCloth(
+            clothId: clothId,
+            name: name,
+            category: category,
+            brand: brand,
+            size: size,
+            place: place,
+            season: season,
+            memo: memo,
+            imageData: imageData
+        )
+        .mapError { ServiceError.error($0) }
+        .eraseToAnyPublisher()
+    }
+    
+    func fetchClothData(clothId: Int) -> AnyPublisher<ClothObject, ServiceError> {
+        return clothRepository
+            .fetchClothData(clothId: clothId)
+            .mapError { ServiceError.error($0) }
+            .eraseToAnyPublisher()
+    }
     
     func getClothList() -> AnyPublisher<[ClothObject], ServiceError> {
         return clothRepository.getClothList()
@@ -53,10 +95,33 @@ final class ClothService: ClothServiceType {
             .eraseToAnyPublisher()
     }
     
-    
+    func deleteCloth(clothId: Int) -> AnyPublisher<Void, ServiceError> {
+        return clothRepository.deleteCloth(clothId: clothId)
+            .mapError { ServiceError.error($0)}
+            .eraseToAnyPublisher()
+    }
 }
 
 final class StubClothService: ClothServiceType {
+    
+    func createNewCloth(name: String, category: Category, brand: String, size: String, place: String, season: [Season], memo: String, imageData: Data?) -> AnyPublisher<ClothObject, ServiceError> {
+        return Just(ClothObject.stubList[0])
+            .setFailureType(to: ServiceError.self)
+            .eraseToAnyPublisher()
+    }
+    
+    func updateCloth(clothId: Int, name: String, category: Category, brand: String, size: String, place: String, season: [Season], memo: String, imageData: Data?) -> AnyPublisher<ClothObject, ServiceError> {
+        return Just(ClothObject.stubList[0])
+            .setFailureType(to: ServiceError.self)
+            .eraseToAnyPublisher()
+    }
+    
+    func fetchClothData(clothId: Int) -> AnyPublisher<ClothObject, ServiceError> {
+        return Just(ClothObject.stubList.filter { $0.clothId == clothId }[0] )
+            .setFailureType(to: ServiceError.self)
+            .eraseToAnyPublisher()
+    }
+    
     func getClothList() -> AnyPublisher<[ClothObject], ServiceError> {
         return Just(ClothObject.stubList)
             .setFailureType(to: ServiceError.self)
@@ -87,5 +152,9 @@ final class StubClothService: ClothServiceType {
             .eraseToAnyPublisher()
     }
     
+    
+    func deleteCloth(clothId: Int) -> AnyPublisher<Void, ServiceError> {
+        return Empty().eraseToAnyPublisher()
+    }
     
 }

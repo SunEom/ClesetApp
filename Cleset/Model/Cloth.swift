@@ -7,7 +7,8 @@
 
 import Foundation
 
-enum Category: String, CaseIterable {
+enum Category: String, CaseIterable, Identifiable {
+    var id: Self { self }
     case shirt = "상의"
     case pants = "하의"
     case onepiece = "한벌옷"
@@ -70,6 +71,20 @@ enum Season {
                 "겨울"
         }
     }
+    
+    static func getSeasonsString(with seasons: [Season]) -> String {
+        var str = ""
+        
+        seasons.forEach { season in
+            str.append(season.displayName)
+            if seasons.last != season {
+                str.append(", ")
+            }
+        }
+        
+        return str
+    }
+    
 }
 
 struct ClothObject: Decodable {
@@ -116,6 +131,20 @@ struct ClothObject: Decodable {
             }
                 
             return list
+        }
+    }
+    
+    var categoryObject: Category {
+        get {
+            var category: Category = .etc
+            
+            Category.allCases.forEach { c in
+                if self.category.contains(c.rawValue) {
+                     category = c
+                }
+            }
+            
+            return category
         }
     }
     

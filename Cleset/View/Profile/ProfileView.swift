@@ -53,23 +53,21 @@ struct ProfileView: View {
     @EnvironmentObject var container: DIContainer
     
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack {
-                    
-                    profileHeader
-                    
-                    Rectangle()
-                        .fill(Color.gray)
-                        .frame(height: 1)
-                    
-                    profileMenuList
-                    
-                    Spacer()
-                }
+        ScrollView {
+            VStack {
+                
+                profileHeader
+                
+                Rectangle()
+                    .fill(Color.gray)
+                    .frame(height: 1)
+                
+                profileMenuList
+                
+                Spacer()
             }
-            .background(Color.white)
         }
+        .background(Color.white)
     }
     
     var profileHeader: some View {

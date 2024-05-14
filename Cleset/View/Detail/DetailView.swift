@@ -13,16 +13,38 @@ struct DetailView: View {
     @StateObject var viewModel: DetailViewModel
     @EnvironmentObject var container: DIContainer
     @State var groupListViewPresent: Bool = false
-    
+    @State var isPresentingEditView: Bool = false
+    @State var isPresentingDeleteConfirmAlert: Bool = false
     var body: some View {
         VStack {
-            NavigationHeader(button: Button {
+            
+            NavigationHeader(button: Menu {
+                Button {
+                    isPresentingEditView = true
+                } label: {
+                    HStack {
+                        Text("수정하기")
+                        Image("edit")
+                    }
+                }
                 
+                Button {
+                    isPresentingDeleteConfirmAlert = true
+                } label: {
+                    HStack {
+                        Text("삭제하기")
+                        Image(systemName: "trash")
+                    }
+                    
+                }
             } label: {
-                Image("edit")
+                Image("verticalEllipsis")
                     .resizable()
-                    .frame(width: 20, height: 20)
-            })
+                    .frame(width: 15, height: 15)
+            }.menuStyle(.button))
+            
+            
+            
             
             ScrollView {
                 VStack(alignment: .leading, spacing: .zero) {
@@ -48,11 +70,6 @@ struct DetailView: View {
                                         .frame(width: 22, height: 22)
                                 }
                                 .shadow(radius: 1)
-                                .sheet(isPresented: $groupListViewPresent, content: {
-                                    GroupListView(viewModel: GroupListViewModel(container: container, clothItem: viewModel.clothData))
-                                        .presentationDetents([.medium])
-                                        .presentationDragIndicator(.automatic)
-                                })
                                 
                                 Button {
                                     viewModel.send(.toggleFavorite)
@@ -112,7 +129,7 @@ struct DetailView: View {
                         
                         Text(viewModel.clothData.clothBody)
                             .font(.system(size: 12))
-                            
+                        
                     }
                     .padding(10)
                     .background(
@@ -128,17 +145,36 @@ struct DetailView: View {
                             .foregroundStyle(Color.gray)
                             .padding(.top, 10)
                     }
-                    
-                        
-                           
-                    
                 }
                 .padding(.horizontal, 30)
             }
+            
         }
         .navigationBarBackButtonHidden()
+        .sheet(isPresented: $groupListViewPresent, content: {
+            GroupListView(viewModel: GroupListViewModel(container: container, clothItem: viewModel.clothData))
+                .presentationDetents([.medium])
+                .presentationDragIndicator(.automatic)
+        })
+        .fullScreenCover(isPresented: $isPresentingEditView, content: {
+            ClothView(viewModel: ClothViewModel(container: container, clothData: viewModel.clothData))
+                .onDisappear {
+                    viewModel.send(.fetchClothData)
+                }
+        })
+        .alert(isPresented: $isPresentingDeleteConfirmAlert, content: {
+            Alert(
+                title: Text("경고"),
+                message: Text("정말로 의상 정보를 삭제하시겠습니까?"),
+                primaryButton: .destructive(Text("삭제")) {
+                    viewModel.send(.deleteClothData {
+                        dismiss()
+                    })
+                },
+                secondaryButton: .cancel(Text("삭제")))
+        })
     }
-
+    
 }
 
 #Preview {

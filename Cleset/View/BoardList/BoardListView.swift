@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum BoardType: String, CaseIterable, Identifiable {
+enum BoardType: String, CaseIterable, Identifiable, MenuItemType {
     var id: Self { self }
     case fashion = "fashion"
     case tip = "tip"
@@ -32,13 +32,13 @@ enum BoardType: String, CaseIterable, Identifiable {
         }
     }
     
-    var image: String {
+    var image: Image {
         get {
             switch self {
                 case .fashion:
-                    "hanger"
+                    Image("hanger")
                 case .tip:
-                    "lightBlub"
+                    Image("lightBlub")
             }
         }
     }
@@ -53,21 +53,19 @@ struct BoardListView: View {
             Text("게시글 목록")
                 .font(.system(size: 18, weight: .semibold))
             
-            List {
+            VStack {
                 ForEach(BoardType.allCases, id:\.self) { board in
                     NavigationLink {
                         BoardView(viewModel: BoardViewModel(container: container, boardType: board))
                     } label: {
-                        HStack {
-                            Text(board.displayName)
-                            Image(board.image)
-                                .resizable()
-                                .frame(width: 20, height: 20)
-                        }
+                        MenuItem(menu: board)
                     }
+                    .buttonStyle(PlainButtonStyle())
                 }
             }
-            .listStyle(.plain)
+            .padding(.vertical, 10)
+            
+            Spacer()
         }
     }
 }

@@ -65,7 +65,11 @@ final class StubUserService: UserServiceType {
     }
     
     func getUserData() -> AnyPublisher<UserModel, ServiceError> {
-        return Empty().eraseToAnyPublisher()
+        return Just(UserModel(id: 1, nickname: "Suneom", gender: .male, age: 27, uid: "asdfqwer1234"))
+            .setFailureType(to: ServiceError.self)
+            .eraseToAnyPublisher()
+        
+//        return Empty().eraseToAnyPublisher()
     }
     
     func checkUserAlreadySigned() -> AnyPublisher<Bool, ServiceError> {

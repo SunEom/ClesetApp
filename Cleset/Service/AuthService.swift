@@ -132,7 +132,10 @@ final class AuthService: AuthServiceType {
 
 final class StubAuthService: AuthServiceType {
     func checkLoginState() -> AnyPublisher<Bool, AuthServiceError> {
-        return Empty().eraseToAnyPublisher()
+        return Just(true)
+            .setFailureType(to: AuthServiceError.self)
+            .eraseToAnyPublisher()
+//        return Empty().eraseToAnyPublisher()
     }
     
     func login() -> AnyPublisher<Void, AuthServiceError> {

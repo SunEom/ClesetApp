@@ -23,7 +23,7 @@ final class HomeViewModel: ObservableObject {
     @Published var groupList: [ClothGroupObject] = []
     @Published var loading: Bool = false
     
-    var container: DIContainer
+    private let container: DIContainer
     
     var subscriptions: Set<AnyCancellable> = Set<AnyCancellable>()
     

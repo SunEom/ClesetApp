@@ -42,59 +42,64 @@ struct HomeView: View {
     @State var selectedGroup: ClothGroupObject?
     
     var body: some View {
-        VStack(spacing: .zero) {
-            header
-            
-            listHeader
-            
-            if selectedFilter == .season {
-                seasonHeader
-                    .onAppear {
-                        viewModel.send(.fetchSeasonClothes(selectedSeason))
-                    }
-            }
-            
-            if selectedFilter == .category {
-                categoryHeader
-                    .onAppear {
-                        viewModel.send(.fetchCategoryClothes(selectedCategory))
-                    }
-            }
-            
-            if selectedFilter == .group {
-                groupHeader
-                    .onAppear {
-                        viewModel.send(.fetchClothGroups)
-                        viewModel.send(.groupTabSelected)
-                    }
-                    .onDisappear {
-                        selectedGroup = nil
-                    }
-            }
-            
-            SearchBar(searchWord: $searchWord)
-                .padding(.horizontal, 20)
-                .padding(.top, 15)
-            
-            if viewModel.loading {
-                VStack {
-                    Spacer()
-                    ProgressView()
-                    Spacer()
+        ZStack {
+            VStack(spacing: .zero) {
+                header
+                
+                listHeader
+                
+                if selectedFilter == .season {
+                    seasonHeader
+                        .onAppear {
+                            viewModel.send(.fetchSeasonClothes(selectedSeason))
+                        }
                 }
-            } else {
-                if
-                    (selectedFilter != .group && viewModel.clothes.isEmpty)
-                        || (selectedFilter == .group && selectedGroup != nil && viewModel.clothes.isEmpty) {
-                    ClothListEmptyView()
+                
+                if selectedFilter == .category {
+                    categoryHeader
+                        .onAppear {
+                            viewModel.send(.fetchCategoryClothes(selectedCategory))
+                        }
+                }
+                
+                if selectedFilter == .group {
+                    groupHeader
+                        .onAppear {
+                            viewModel.send(.fetchClothGroups)
+                            viewModel.send(.groupTabSelected)
+                        }
+                        .onDisappear {
+                            selectedGroup = nil
+                        }
+                }
+                
+                SearchBar(searchWord: $searchWord)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 15)
+                
+                if viewModel.loading {
+                    VStack {
+                        Spacer()
+                        ProgressView()
+                        Spacer()
+                    }
                 } else {
-                    myClothList
+                    if
+                        (selectedFilter != .group && viewModel.clothes.isEmpty)
+                            || (selectedFilter == .group && selectedGroup != nil && viewModel.clothes.isEmpty) {
+                        ClothListEmptyView()
+                    } else {
+                        myClothList
+                    }
                 }
+                
+            }
+            .onAppear {
+                viewModel.send(.fetchClothes)
             }
             
-        }
-        .onAppear {
-            viewModel.send(.fetchClothes)
+            newClothButton
+       
         }
     }
     
@@ -179,6 +184,8 @@ struct HomeView: View {
                     .buttonStyle(PlainButtonStyle())
                     
                 }
+                
+                Spacer().frame(height: 100)
             }
             .padding(.vertical, 5)
         }
@@ -219,6 +226,45 @@ struct HomeView: View {
         }
         
         
+    }
+    
+    var newClothButton: some View {
+        VStack {
+            Spacer()
+            HStack {
+                Spacer()
+                NavigationLink {
+                    ClothView(viewModel: ClothViewModel(container: container))
+                } label: {
+                    ZStack {
+                        Image("manageClothByGroup")
+                            .resizable()
+                            .renderingMode(.template)
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 35)
+                            .foregroundStyle(Color.white)
+                            .padding(.top, 5)
+                            .padding(.leading, -5)
+                        
+                        Image(systemName: "plus")
+                            .resizable()
+                            .renderingMode(.template)
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 10)
+                            .bold()
+                            .foregroundStyle(Color.white)
+                            .padding(.top, -23)
+                            .padding(.leading, 18)
+                            
+                    }
+                }
+                .padding(15)
+                .background(Color.mainGreen)
+                .clipShape(Circle())
+                .shadow(radius: 3)
+            }
+            .padding(.all, 20)
+        }
     }
     
 }

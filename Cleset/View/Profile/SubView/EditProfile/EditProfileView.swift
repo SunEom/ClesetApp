@@ -16,28 +16,13 @@ struct EditProfileView: View {
     
     var body: some View {
         VStack {
-            NavigationHeader(
-                button: Button {
-                    viewModel.send(.updateButtonTap(nickname: nickname, gender: gender, age: age))
-                } label: {
-                    Text("저장")
-                }
-                    .buttonStyle(PlainButtonStyle())
-            )
+            NavigationHeader(button: editProfileRightBarButton)
             
             ScrollView {
                 VStack(alignment: .leading) {
-                    
-                    
                     nicknameInput
-                    
-                    
                     genderInput
-                    
                     ageInput
-                    
-                    Spacer()
-                    
                 }.padding(.horizontal, 20)
             }
         }
@@ -54,6 +39,14 @@ struct EditProfileView: View {
                 })
             )
         })
+    }
+    
+    var editProfileRightBarButton: some View {
+        Button {
+            viewModel.send(.updateButtonTap(nickname: nickname, gender: gender, age: age))
+        } label: {
+            Text("저장")
+        }
     }
     
     var nicknameInput: some View {

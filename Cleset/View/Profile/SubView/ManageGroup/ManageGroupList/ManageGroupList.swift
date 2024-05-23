@@ -25,27 +25,12 @@ struct ManageGroupList: View {
                 } else {
                     ScrollView {
                         ForEach(viewModel.groupList) { group in
-                            HStack {
-                                Text(group.folderName)
-                                Spacer()
-                                Button {
-                                    selectedGroup = group
-                                    isPresentingEditView = true
-                                } label: {
-                                    Image("edit")
-                                }
-                                
-                                Spacer().frame(width: 10)
-                                
-                                Button {
-                                    selectedGroup = group
-                                    isPresentingDeleteAlertView = true
-                                } label: {
-                                    Image(systemName: "trash")
-                                        .foregroundStyle(Color.red)
-                                }
-                            }
-                            .padding(.vertical, 5)
+                            GroupItem(
+                                selectedGroup: $selectedGroup,
+                                isPresentingEditView: $isPresentingEditView,
+                                isPresentingDeleteAlertView: $isPresentingDeleteAlertView,
+                                group: group
+                            )
                         }
                         .padding(.horizontal, 10)
                     }
@@ -56,7 +41,6 @@ struct ManageGroupList: View {
         .sheet(isPresented: Binding<Bool>(get: {
             return isPresentingEditView && selectedGroup != nil
         }, set: { _ in}), content: {
-            
             GroupEditView(
                 group: selectedGroup!,
                 newGroupName: selectedGroup!.folderName,
@@ -68,7 +52,6 @@ struct ManageGroupList: View {
             .onDisappear {
                 selectedGroup = nil
             }
-            
         })
         .onAppear {
             viewModel.send(.fetchGroupList)
@@ -97,6 +80,38 @@ struct ManageGroupList: View {
         
     }
     
+    struct GroupItem: View {
+        @Binding var selectedGroup: ClothGroupObject?
+        @Binding var isPresentingEditView: Bool
+        @Binding var isPresentingDeleteAlertView: Bool
+        let group: ClothGroupObject
+        
+        var body: some View {
+            HStack {
+                Text(group.folderName)
+                
+                Spacer()
+                
+                Button {
+                    selectedGroup = group
+                    isPresentingEditView = true
+                } label: {
+                    Image("edit")
+                }
+                
+                Spacer().frame(width: 10)
+                
+                Button {
+                    selectedGroup = group
+                    isPresentingDeleteAlertView = true
+                } label: {
+                    Image(systemName: "trash")
+                        .foregroundStyle(Color.red)
+                }
+            }
+            .padding(.vertical, 7)
+        }
+    }
     
     struct GroupEditView: View {
         let group: ClothGroupObject

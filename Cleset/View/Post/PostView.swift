@@ -13,73 +13,11 @@ struct PostView: View {
     @StateObject var viewModel: PostViewModel
     var body: some View {
         VStack(alignment: .leading) {
-            NavigationHeader(
-                button: viewModel.postData.userId == UserManager.getUserData()?.id ?
-                NavigationLink(destination: {
-                    WritePostView(viewModel:
-                                    WritePostViewModel(
-                                        container: container,
-                                        boardType: viewModel.postData.boardType,
-                                        postData: viewModel.postData
-                                    )
-                    ).onDisappear {
-                        viewModel.send(.fetchPostDetail)
-                    }
-                }, label: {
-                    Text("수정")
-                })
-                : nil
-            )
+            NavigationHeader(button: postViewRightBarButton)
+            
             ScrollView {
-                LazyVStack(alignment: .leading) {
-                    HStack(alignment: .center) {
-                        Text(viewModel.postData.title)
-                            .font(.system(size: 20, weight: .semibold))
-                        Spacer()
-                        Button {
-                            viewModel.send(.favoriteButtonTap)
-                        } label: {
-                            HStack {
-                                Image(systemName: viewModel.favorite ? "heart.fill" : "heart")
-                                    .resizable()
-                                    .renderingMode(.template)
-                                    .foregroundStyle(Color.red)
-                                    .frame(width: 18, height: 16)
-                                
-                                Text("\(viewModel.favoriteCount)")
-                                    .font(.system(size: 15))
-                                    .foregroundStyle(Color.red)
-                            }
-                            .padding(3)
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                    }
-                    .padding(.vertical, 10)
-                    
-                    HStack {
-                        Text(viewModel.postData.nickname)
-                        
-                        Spacer()
-                        
-                        Text(BoardType(rawValue: viewModel.postData.genre)!.displayName)
-                        
-                    }
-                    .font(.system(size: 12))
-                    .padding(.vertical, -10)
-                    
-                    if let url = viewModel.postData.imageURL {
-                        KFImage(url)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(maxWidth: UIScreen.main.bounds.width - 30)
-                            .padding(.top, 20)
-                    }
-                    
-                    Text(viewModel.postData.postBody)
-                        .font(.system(size: 13))
-                        .padding(.top, 20)
-                    
-                }.padding(.horizontal, 20)
+               
+                postContentView
                 
                 Rectangle().fill(Color.gray0)
                     .frame(height: 1)
@@ -95,6 +33,76 @@ struct PostView: View {
             viewModel.send(.fetchPostDetail)
             viewModel.send(.fetchComments)
         }
+    }
+    
+    var postViewRightBarButton: some View {
+        viewModel.postData.userId == UserManager.getUserData()?.id ?
+        NavigationLink(destination: {
+            WritePostView(viewModel:
+                            WritePostViewModel(
+                                container: container,
+                                boardType: viewModel.postData.boardType,
+                                postData: viewModel.postData
+                            )
+            ).onDisappear {
+                viewModel.send(.fetchPostDetail)
+            }
+        }, label: {
+            Text("수정")
+        })
+        : nil
+    }
+    
+    var postContentView: some View {
+        LazyVStack(alignment: .leading) {
+            HStack(alignment: .center) {
+                Text(viewModel.postData.title)
+                    .font(.system(size: 20, weight: .semibold))
+                Spacer()
+                Button {
+                    viewModel.send(.favoriteButtonTap)
+                } label: {
+                    HStack {
+                        Image(systemName: viewModel.favorite ? "heart.fill" : "heart")
+                            .resizable()
+                            .renderingMode(.template)
+                            .foregroundStyle(Color.red)
+                            .frame(width: 18, height: 16)
+                        
+                        Text("\(viewModel.favoriteCount)")
+                            .font(.system(size: 15))
+                            .foregroundStyle(Color.red)
+                    }
+                    .padding(3)
+                }
+                .buttonStyle(PlainButtonStyle())
+            }
+            .padding(.vertical, 10)
+            
+            HStack {
+                Text(viewModel.postData.nickname)
+                
+                Spacer()
+                
+                Text(BoardType(rawValue: viewModel.postData.genre)!.displayName)
+                
+            }
+            .font(.system(size: 12))
+            .padding(.vertical, -10)
+            
+            if let url = viewModel.postData.imageURL {
+                KFImage(url)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(maxWidth: UIScreen.main.bounds.width - 30)
+                    .padding(.top, 20)
+            }
+            
+            Text(viewModel.postData.postBody)
+                .font(.system(size: 13))
+                .padding(.top, 20)
+            
+        }.padding(.horizontal, 20)
     }
     
     var commentSection: some View {

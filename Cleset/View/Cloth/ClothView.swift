@@ -105,7 +105,6 @@ struct ClothView: View {
 
         })
         .onAppear {
-
             if let clothData = viewModel.clothData {
                 name = clothData.name
                 category = clothData.categoryObject

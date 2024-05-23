@@ -15,37 +15,10 @@ struct DetailView: View {
     @State var groupListViewPresent: Bool = false
     @State var isPresentingEditView: Bool = false
     @State var isPresentingDeleteConfirmAlert: Bool = false
+    
     var body: some View {
         VStack {
-            
-            NavigationHeader(button: Menu {
-                Button {
-                    isPresentingEditView = true
-                } label: {
-                    HStack {
-                        Text("수정하기")
-                        Image("edit")
-                    }
-                }
-                
-                Button {
-                    isPresentingDeleteConfirmAlert = true
-                } label: {
-                    HStack {
-                        Text("삭제하기")
-                        Image(systemName: "trash")
-                    }
-                    
-                }
-            } label: {
-                Image("verticalEllipsis")
-                    .resizable()
-                    .frame(width: 15, height: 15)
-            }.menuStyle(.button))
-            
-            
-            
-            
+            NavigationHeader(button: detailViewRightBarButton)
             ScrollView {
                 VStack(alignment: .leading, spacing: .zero) {
                     ZStack {
@@ -55,37 +28,7 @@ struct DetailView: View {
                             .frame(minWidth: UIScreen.main.bounds.width - 30, minHeight: 250, maxHeight: 250)
                             .padding(.bottom, 10)
                         
-                        VStack {
-                            HStack {
-                                Spacer()
-                            }
-                            Spacer()
-                            HStack(spacing: 15) {
-                                Spacer()
-                                Button {
-                                    groupListViewPresent.toggle()
-                                } label: {
-                                    Image("folderAdd")
-                                        .resizable()
-                                        .frame(width: 22, height: 22)
-                                }
-                                .shadow(radius: 1)
-                                
-                                Button {
-                                    viewModel.send(.toggleFavorite)
-                                } label: {
-                                    Image(systemName: viewModel.clothData.favBool ? "heart.fill" : "heart")
-                                        .resizable()
-                                        .renderingMode(.template)
-                                        .foregroundStyle(Color.red)
-                                        .frame(width: 18, height: 16)
-                                }
-                                .shadow(radius: 1)
-                                
-                            }
-                            .padding(20)
-                        }
-                        
+                        clothButtonView
                     }
                     
                     
@@ -114,37 +57,9 @@ struct DetailView: View {
                         .lineLimit(1)
                         .padding(.bottom, 10)
                     
+                    memoView
                     
-                    VStack(alignment: .leading, spacing: .zero) {
-                        HStack {
-                            Text("메모")
-                                .font(.system(size: 14, weight: .bold))
-                            
-                            Image("memo")
-                                .resizable()
-                                .frame(width: 17, height: 17)
-                            Spacer()
-                        }
-                        .padding(.bottom, 5)
-                        
-                        Text(viewModel.clothData.clothBody)
-                            .font(.system(size: 12))
-                        
-                    }
-                    .padding(10)
-                    .background(
-                        Color.logoBg
-                            .shadow(radius: 1)
-                    )
-                    
-                    HStack {
-                        Spacer()
-                        Text(viewModel.clothData.displayDate)
-                            .font(.system(size: 10))
-                            .lineLimit(1)
-                            .foregroundStyle(Color.gray)
-                            .padding(.top, 10)
-                    }
+                    dateView
                 }
                 .padding(.horizontal, 30)
             }
@@ -175,6 +90,97 @@ struct DetailView: View {
         })
     }
     
+    var detailViewRightBarButton: some View {
+        Menu {
+           Button {
+               isPresentingEditView = true
+           } label: {
+               HStack {
+                   Text("수정하기")
+                   Image("edit")
+               }
+           }
+           
+           Button {
+               isPresentingDeleteConfirmAlert = true
+           } label: {
+               HStack {
+                   Text("삭제하기")
+                   Image(systemName: "trash")
+               }
+               
+           }
+       } label: {
+           Image("verticalEllipsis")
+               .resizable()
+               .frame(width: 15, height: 15)
+       }.menuStyle(.button)
+    }
+    
+    var clothButtonView: some View {
+        VStack {
+            Spacer()
+            HStack(spacing: 15) {
+                Spacer()
+                Button {
+                    groupListViewPresent.toggle()
+                } label: {
+                    Image("folderAdd")
+                        .resizable()
+                        .frame(width: 22, height: 22)
+                }
+                .shadow(radius: 1)
+                
+                Button {
+                    viewModel.send(.toggleFavorite)
+                } label: {
+                    Image(systemName: viewModel.clothData.favBool ? "heart.fill" : "heart")
+                        .resizable()
+                        .renderingMode(.template)
+                        .foregroundStyle(Color.red)
+                        .frame(width: 18, height: 16)
+                }
+                .shadow(radius: 1)
+                
+            }
+            .padding(20)
+        }
+    }
+    
+    var memoView: some View {
+        VStack(alignment: .leading, spacing: .zero) {
+            HStack {
+                Text("메모")
+                    .font(.system(size: 14, weight: .bold))
+                
+                Image("memo")
+                    .resizable()
+                    .frame(width: 17, height: 17)
+                Spacer()
+            }
+            .padding(.bottom, 5)
+            
+            Text(viewModel.clothData.clothBody)
+                .font(.system(size: 12))
+            
+        }
+        .padding(10)
+        .background(
+            Color.logoBg
+                .shadow(radius: 1)
+        )
+    }
+    
+    var dateView: some View {
+        HStack {
+            Spacer()
+            Text(viewModel.clothData.displayDate)
+                .font(.system(size: 10))
+                .lineLimit(1)
+                .foregroundStyle(Color.gray)
+                .padding(.top, 10)
+        }
+    }
 }
 
 #Preview {

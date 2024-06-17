@@ -62,8 +62,8 @@ final class WritePostViewModel: ObservableObject {
             case let .imageSelected(photosItem):
                 Task {
                     if let data = try? await photosItem?.loadTransferable(type: Data.self) {
-                        self.selectedImageData = data
-                        if let uiImage = UIImage(data: data) {
+                        if let uiImage = UIImage(data: data), let optimizedData = uiImage.downscaleTOjpegData(maxBytes: 500_000) {
+                            self.selectedImageData = optimizedData
                             let image = Image(uiImage: uiImage)
                             DispatchQueue.main.async {
                                 self.selectedImagePreview = image

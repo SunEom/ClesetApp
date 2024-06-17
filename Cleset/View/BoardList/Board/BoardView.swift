@@ -29,6 +29,23 @@ struct BoardView: View {
                 Text("작성")
             }), title: viewModel.boardType.displayName)
             
+            if viewModel.postCellViewModels.isEmpty {
+                emptyContentView
+            } else {
+                contentView
+            }
+            
+            Spacer()
+        }
+        .onAppear {
+            viewModel.send(.fetchPosts)
+        }
+        .navigationBarBackButtonHidden()
+        
+    }
+    
+    var contentView: some View {
+        VStack {
             SearchBar(searchWord: $searchWord)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 1)
@@ -57,12 +74,19 @@ struct BoardView: View {
                     }
                 }
             }
+        }
+    }
+
+    var emptyContentView: some View {
+        VStack {
+            Spacer()
+            HStack {
+                Image("emptyBoard")
+            }
+            .padding(.bottom, 10)
+            Text("작성된 게시글이 없습니다")
             Spacer()
         }
-        .onAppear {
-            viewModel.send(.fetchPosts)
-        }
-        .navigationBarBackButtonHidden()
     }
 }
 

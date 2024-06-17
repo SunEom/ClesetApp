@@ -48,8 +48,12 @@ struct PostCell: View {
             if let imageURL = viewModel.postData.imageURL {
                 KFImage(imageURL)
                     .resizable()
+                    .aspectRatio(contentMode: .fit)
                     .frame(width: 50, height: 50)
-                    .clipShape(RoundedRectangle(cornerRadius: 5))
+                    .background (
+                        RoundedRectangle(cornerRadius: 5)
+                            .stroke(.gray, lineWidth: 1)
+                    )
             }
             
         }

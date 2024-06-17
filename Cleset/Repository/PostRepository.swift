@@ -20,6 +20,7 @@ protocol PostRepository {
     func createNewPost(boardType: BoardType, title: String, postBody: String, imageData: Data?) -> AnyPublisher<Post, PostRepositoryError>
     func updatePost(postId: Int, boardType: BoardType, title: String, postBody: String, imageData: Data?) -> AnyPublisher<Post, PostRepositoryError>
     func toggleFavorite(postId: Int, favorite: Bool) -> AnyPublisher<PostDetail, PostRepositoryError>
+    func deletePost(postId: Int) -> AnyPublisher<Void, PostRepositoryError>
 }
 
 final class NetworkPostRepository: NetworkRepository, PostRepository {
@@ -86,6 +87,17 @@ final class NetworkPostRepository: NetworkRepository, PostRepository {
         
         return postData(withPath: "post/change_favorite", body: body)
             .decode(type: PostDetail.self, decoder: JSONDecoder())
+            .mapError { PostRepositoryError.customError($0) }
+            .eraseToAnyPublisher()
+    }
+    
+    func deletePost(postId: Int) -> AnyPublisher<Void, PostRepositoryError> {
+        let body: [String: Any] = [
+            "post_id": postId
+        ]
+        
+        return postData(withPath: "post/delete", body: body)
+            .map { _ in () }
             .mapError { PostRepositoryError.customError($0) }
             .eraseToAnyPublisher()
     }

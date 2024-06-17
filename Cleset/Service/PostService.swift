@@ -16,6 +16,7 @@ protocol PostServiceType {
     func createNewPost(boardType: BoardType, title: String, postBody: String, imageData: Data?) -> AnyPublisher<Post, ServiceError>
     func updatePost(postId: Int, boardType: BoardType, title: String, postBody: String, imageData: Data?) -> AnyPublisher<Post, ServiceError>
     func toggleFavorite(postId: Int, favorite: Bool) -> AnyPublisher<PostDetail, ServiceError>
+    func deletePost(postId: Int) -> AnyPublisher<Void, ServiceError>
 }
 
 final class PostService: PostServiceType {
@@ -70,6 +71,13 @@ final class PostService: PostServiceType {
             .mapError { ServiceError.error($0) }
             .eraseToAnyPublisher()
     }
+    
+    func deletePost(postId: Int) -> AnyPublisher<Void, ServiceError> {
+        return postRepository
+            .deletePost(postId: postId)
+            .mapError { ServiceError.error($0)}
+            .eraseToAnyPublisher()
+    }
 }
 
 final class StubPostService: PostServiceType {
@@ -106,6 +114,10 @@ final class StubPostService: PostServiceType {
     }
     
     func toggleFavorite(postId: Int, favorite: Bool) -> AnyPublisher<PostDetail, ServiceError> {
+        return Empty().eraseToAnyPublisher()
+    }
+    
+    func deletePost(postId: Int) -> AnyPublisher<Void, ServiceError> {
         return Empty().eraseToAnyPublisher()
     }
 }

@@ -24,7 +24,7 @@ struct Post: Decodable, Identifiable {
     }
     var imageURL: URL? {
         get {
-            if fileName == nil {
+            if fileName == nil || fileName == "" {
                 return nil
             } else {
                 return URL(string: "\(K.serverURL)/img/\(fileName!)")

@@ -26,6 +26,7 @@ final class PostViewModel: ObservableObject {
         case fetchComments
         case fetchPostDetail
         case favoriteButtonTap
+        case deletePost(completion: (() -> Void))
     }
     
     func send(_ action: Action) {
@@ -60,6 +61,15 @@ final class PostViewModel: ObservableObject {
                         self?.favorite = postDetail.favoriteBool
                         self?.favoriteCount = postDetail.favoriteCount
                     }.store(in: &subscriptions)
+                
+            case let .deletePost(completion):
+                container.services.postService.deletePost(postId: postData.postId)
+                    .receive(on: DispatchQueue.main)
+                    .sink { _ in
+                    } receiveValue: { _ in
+                        completion()
+                    }.store(in: &subscriptions)
+
         }
     }
 }

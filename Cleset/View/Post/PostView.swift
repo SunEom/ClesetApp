@@ -9,8 +9,11 @@ import SwiftUI
 import Kingfisher
 
 struct PostView: View {
+    @Environment(\.dismiss) var dismiss
     @EnvironmentObject var container: DIContainer
     @StateObject var viewModel: PostViewModel
+    @State var isPresentingDeleteConfirmAlert: Bool = false
+    
     var body: some View {
         VStack(alignment: .leading) {
             NavigationHeader(button: postViewRightBarButton)
@@ -33,25 +36,56 @@ struct PostView: View {
             viewModel.send(.fetchPostDetail)
             viewModel.send(.fetchComments)
         }
+        .alert(isPresented: $isPresentingDeleteConfirmAlert, content: {
+            Alert(
+                title: Text("경고"),
+                message: Text("정말로 게시글을 삭제하시겠습니까?"),
+                primaryButton: .destructive(Text("삭제")) {
+                    viewModel.send(.deletePost {
+                        dismiss()
+                    })
+                },
+                secondaryButton: .cancel(Text("삭제")))
+        })
     }
     
     var postViewRightBarButton: some View {
         viewModel.postData.userId == UserManager.getUserData()?.id ?
-        NavigationLink(destination: {
-            WritePostView(viewModel:
-                            WritePostViewModel(
-                                container: container,
-                                boardType: viewModel.postData.boardType,
-                                postData: viewModel.postData
-                            )
-            ).onDisappear {
-                viewModel.send(.fetchPostDetail)
-            }
-        }, label: {
-            Text("수정")
-        })
+        
+        Menu {
+           NavigationLink {
+               WritePostView(viewModel:
+                               WritePostViewModel(
+                                   container: container,
+                                   boardType: viewModel.postData.boardType,
+                                   postData: viewModel.postData
+                               )
+               ).onDisappear {
+                   viewModel.send(.fetchPostDetail)
+               }
+           } label: {
+               HStack {
+                   Text("수정하기")
+                   Image("edit")
+               }
+           }
+           
+           Button {
+               isPresentingDeleteConfirmAlert = true
+           } label: {
+               HStack {
+                   Text("삭제하기")
+                   Image(systemName: "trash")
+               }
+           }
+       } label: {
+           Image("verticalEllipsis")
+               .resizable()
+               .frame(width: 15, height: 15)
+       }.menuStyle(.button)
         : nil
     }
+    
     
     var postContentView: some View {
         LazyVStack(alignment: .leading) {

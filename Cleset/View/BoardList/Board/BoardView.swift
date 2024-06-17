@@ -29,7 +29,9 @@ struct BoardView: View {
                 Text("작성")
             }), title: viewModel.boardType.displayName)
             
-            if viewModel.postCellViewModels.isEmpty {
+            if viewModel.loading {
+                loadingView
+            } else if viewModel.postCellViewModels.isEmpty {
                 emptyContentView
             } else {
                 contentView
@@ -85,6 +87,14 @@ struct BoardView: View {
             }
             .padding(.bottom, 10)
             Text("작성된 게시글이 없습니다")
+            Spacer()
+        }
+    }
+    
+    var loadingView: some View {
+        VStack {
+            Spacer()
+            ProgressView()
             Spacer()
         }
     }

@@ -18,6 +18,7 @@ final class BoardViewModel: ObservableObject {
     private var subscriptions: Set<AnyCancellable> = Set<AnyCancellable>()
     
     @Published var postCellViewModels: [PostCellViewModel] = []
+    @Published var loading: Bool = false
     
     init(container: DIContainer, boardType: BoardType) {
         self.container = container
@@ -27,9 +28,11 @@ final class BoardViewModel: ObservableObject {
     func send(_ action: Action) {
         switch action {
             case .fetchPosts:
+                loading = true
                 container.services.postService.fetchPostsWithBoardType(with: boardType)
                     .receive(on: DispatchQueue.main)
-                    .sink { completion in
+                    .sink { [weak self] completion in
+                        self?.loading = false
                     } receiveValue: { [weak self] postList in
                         guard let self = self else { return }
                         self.postCellViewModels = postList.map { self.createViewModel(with: $0) }

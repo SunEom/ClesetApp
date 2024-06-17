@@ -23,17 +23,17 @@ struct MainTabView: View {
             
             switch selectedTab {
                 case .board:
-                    NavigationStack {
+                    NavigationView {
                         BoardListView()
                     }
                     
                 case .home:
-                    NavigationStack {
+                    NavigationView {
                         HomeView(viewModel: HomeViewModel(container: container))
                     }
                     
                 case .profile:
-                    NavigationStack {
+                    NavigationView {
                         ProfileView(viewModel: ProfileViewModel())
                     }
             }

@@ -15,6 +15,7 @@ enum ProfileMenu: CaseIterable, MenuItemType {
     case manageGroup
     case managePost
     case manageAccount
+    case manageApp
     
     
     var displayName: String {
@@ -28,6 +29,8 @@ enum ProfileMenu: CaseIterable, MenuItemType {
                     return "게시글 관리"
                 case .manageAccount:
                     return "계정 관리"
+                case .manageApp:
+                    return "설정"
             }
         }
     }
@@ -37,12 +40,23 @@ enum ProfileMenu: CaseIterable, MenuItemType {
             switch self {
                 case .editProfile:
                     Image("editProfile")
+                        .renderingMode(.template)
+                        
                 case .manageGroup:
                     Image("manageGroup")
+                        .renderingMode(.template)
+                        
                 case .managePost:
                     Image("managePost")
+                        .renderingMode(.template)
+                        
                 case .manageAccount:
                     Image("manageAccount")
+                        .renderingMode(.template)
+                        
+                case .manageApp:
+                    Image(systemName: "gear")
+                        .renderingMode(.template)
             }
         }
     }
@@ -67,7 +81,7 @@ struct ProfileView: View {
                 Spacer()
             }
         }
-        .background(Color.white)
+        .background(Color.background)
     }
     
     var profileHeader: some View {
@@ -113,6 +127,9 @@ struct ProfileView: View {
                             
                         case .manageAccount:
                             ManageAccountView()
+                            
+                        case .manageApp:
+                            ManageAppView()
                     }
                 } label: {
                     MenuItem(menu: menu)

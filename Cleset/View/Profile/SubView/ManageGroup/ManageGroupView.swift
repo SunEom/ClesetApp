@@ -25,8 +25,11 @@ enum ManageGroupMenu: MenuItemType, CaseIterable {
         switch self {
             case .manageGroupList:
                 Image("manageGroupList")
+                    .renderingMode(.template)
+                
             case .manageClothByGroup:
                 Image("manageClothByGroup")
+                    .renderingMode(.template)
         }
     }
 }
@@ -63,6 +66,7 @@ struct ManageGroupView: View {
             
             Spacer()
         }
+        .background(Color.background)
         .navigationBarBackButtonHidden()
         
     }

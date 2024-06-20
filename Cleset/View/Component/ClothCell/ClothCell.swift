@@ -52,7 +52,7 @@ struct ClothCell: View {
         .frame(height: 100)
         .clipShape(RoundedRectangle(cornerRadius: 5))
         .background(
-            Color.white
+            Color.background
                 .clipShape(RoundedRectangle(cornerRadius: 5))
                 .shadow(radius: 1)
         )

@@ -50,6 +50,7 @@ struct ManageClothByGroupView: View {
             Spacer()
             
         }
+        .background(Color.background)
         .onAppear {
             viewModel.send(.fetchGroups)
         }

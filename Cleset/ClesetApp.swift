@@ -28,12 +28,15 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 struct ClesetApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject var container: DIContainer = .init(services: Services())
+    @AppStorage(K.AppStorage.Appearance) var appearanceValue: Int = UserDefaults.standard.integer(forKey: K.AppStorage.Appearance)
     
     var body: some Scene {
         WindowGroup {
             AuthView(viewModel: AuthViewModel(container: container))
                 .environmentObject(container)
-                .preferredColorScheme(.light)
+                .onAppear {
+                    container.appearanceController.changeAppearance(AppearanceStyle(rawValue: appearanceValue))
+                }
         }
     }
 }

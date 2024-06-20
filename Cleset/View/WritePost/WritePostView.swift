@@ -17,6 +17,7 @@ struct WritePostView: View {
     @State var selectedImage: PhotosPickerItem? = nil
     @State var imagePreview: Image? = nil
     
+    
     var body: some View {
         VStack {
             NavigationHeader(button: Button {
@@ -39,21 +40,23 @@ struct WritePostView: View {
             }
             .pickerStyle(.menu)
             .frame(width: UIScreen.main.bounds.width)
-            .accentColor(.black)
+            .accentColor(.bk)
             
             
             ZStack {
                 
                 TextEditor(text: $postBody)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .background(RoundedRectangle(cornerRadius:10).stroke(Color.gray0, lineWidth: 1))
+                    .clipShape(
+                        RoundedRectangle(cornerRadius: 10)
+                    )
+                    .scrollContentBackground(.hidden)
                 
                 if postBody == "" {
                     VStack {
                         HStack {
                             Text("내용을 입력해주세요")
                                 .font(.system(size: 16))
-                                .foregroundStyle(Color.gray0)
+                                .foregroundStyle(Color.gray)
                                 .padding(7)
                             
                             Spacer()
@@ -81,7 +84,10 @@ struct WritePostView: View {
                         .renderingMode(.template)
                         .frame(width: 45, height: 45)
                         .padding(8)
-                        .background(RoundedRectangle(cornerRadius: 10).stroke(Color.gray0, lineWidth: 1))
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.bk, lineWidth: 1)
+                        )
                 }
                 
                 Spacer()
@@ -92,15 +98,17 @@ struct WritePostView: View {
                 ) {
                     Group {
                         Image(systemName: "camera")
+                            .renderingMode(.template)
                         Text("이미지 선택하기")
                     }
-                    .foregroundStyle(Color.black)
+                    .foregroundStyle(Color.bk)
                 }
                 .padding(.horizontal, 10)
             }
             .padding(.vertical, 10)
             
         }
+        .background(Color.background)
         .padding(.horizontal, 20)
         .navigationBarBackButtonHidden()
         .onChange(of: selectedImage) { _ in

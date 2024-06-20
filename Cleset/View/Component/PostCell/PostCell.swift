@@ -26,17 +26,19 @@ struct PostCell: View {
                         HStack(spacing: 3) {
                             Image("dot")
                                 .resizable()
+                                .renderingMode(.template)
                                 .frame(width: 6, height: 6)
                                 .padding(.trailing, 5)
                              
                             Image("commentBubble")
                                 .resizable()
+                                .renderingMode(.template)
                                 .frame(width: 13, height: 13)
                             
                             Text("\(commentCount)")
                                 .font(.system(size: 12))
                         }
-                        
+                        .foregroundStyle(Color.bk)
                     }
                     
                 }

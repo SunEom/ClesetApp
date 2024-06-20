@@ -108,6 +108,7 @@ struct SignUpView: View {
             
             Spacer()
         }
+        .background(Color.background)
         .alert(isPresented: $viewModel.presentingAlert, content: {
             Alert(
                 title: Text(viewModel.alertData?.title ?? ""),

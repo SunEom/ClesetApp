@@ -90,7 +90,7 @@ struct GroupListView: View {
                             Text(group.folderName)
                             Spacer()
                         }
-                        .background(Color.white)
+                        .background(Color.background)
                         .padding(.vertical, 10)
                         .padding(.horizontal, 10)
                     }

@@ -36,6 +36,7 @@ struct ManagePostList: View {
             }
             Spacer()
         }
+        .background(Color.background)
         .navigationBarBackButtonHidden()
         .onAppear {
             viewModel.send(.fetchPosts)

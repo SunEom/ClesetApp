@@ -39,6 +39,7 @@ struct BoardView: View {
             
             Spacer()
         }
+        .background(Color.background)
         .onAppear {
             viewModel.send(.fetchPosts)
         }

@@ -85,6 +85,7 @@ struct ClothView: View {
                 Spacer().frame(height: 30)
             }
         }
+        .background(Color.background)
         .navigationBarBackButtonHidden()
         .alert(isPresented: Binding(get: {
             viewModel.alertData != nil
@@ -153,7 +154,7 @@ struct ClothView: View {
                     Image(systemName: "camera")
                     Text("이미지 선택하기")
                 }
-                .foregroundStyle(Color.black)
+                .foregroundStyle(Color.bk)
             }
             .padding(.vertical, 10)
             .padding(.horizontal, 30)
@@ -219,6 +220,7 @@ struct ClothView: View {
                     .frame(height: 150)
                     .border(Color.gray0, width: 1)
                     .font(.system(size: 14))
+                    .scrollContentBackground(.hidden)
             }
             Spacer()
         }
@@ -252,7 +254,7 @@ struct ClothView: View {
         var body: some View {
             Toggle(isOn: $isOn) {
                 Rectangle()
-                    .stroke(Color.black)
+                    .stroke(Color.bk)
                     .frame(width: 15, height: 15)
                     .overlay {
                         if isOn {
@@ -264,7 +266,7 @@ struct ClothView: View {
                 Text(title)
             }
             .toggleStyle(.button)
-            .foregroundStyle(Color.black)
+            .foregroundStyle(Color.bk)
             .tint(Color.mainGreen)
         }
     }

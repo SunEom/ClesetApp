@@ -21,13 +21,15 @@ struct MenuItem: View {
                 .aspectRatio(contentMode: .fit)
                 .padding(.trailing, 10)
                 .frame(width: 35)
+                
             Text(menu.displayName)
             Spacer()
             Image(systemName: "chevron.right")
         }
+        .foregroundStyle(Color.bk)
         .padding(.horizontal, 20)
         .frame(height: 40)
-        .background(Color.white)
+        .background(Color.background)
     }
 }
 

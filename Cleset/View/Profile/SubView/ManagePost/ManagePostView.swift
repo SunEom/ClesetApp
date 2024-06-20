@@ -58,6 +58,7 @@ struct ManagePostView: View {
             }
             .listStyle(.inset)
         }
+        .background(Color.background)
         .navigationBarBackButtonHidden()
     }
     

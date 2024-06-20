@@ -10,3 +10,9 @@ import Foundation
 struct K {
     static let serverURL: String = "http://127.0.0.1:8000"
 }
+
+extension K {
+    struct AppStorage {
+        static let Appearance = "AppStorage_Appearance"
+    }
+}

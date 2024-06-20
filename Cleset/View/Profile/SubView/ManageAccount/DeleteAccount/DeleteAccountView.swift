@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DeleteAccountView: View {
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var authViewModel: AuthViewModel
     @StateObject var viewModel: DeleteAccountViewModel
     var body: some View {
         VStack {
@@ -22,40 +23,46 @@ struct DeleteAccountView: View {
                     Text("탈퇴하시기 전 다시 한번 확인해주세요.")
                         .font(.system(size: 14, weight: .semibold))
                     
-                        VStack {
-                            HStack {
-                                Image("dot")
-                                    .resizable()
-                                    .frame(width: 8, height: 8)
-                                
-                                Text("한번 삭제된 계정은 더이상 복구할 수 없습니다.")
-                                    .font(.system(size: 12))
-                                Spacer()
-                            }
+                    VStack {
+                        HStack {
+                            Image("dot")
+                                .resizable()
+                                .renderingMode(.template)
+                                .foregroundStyle(Color.background)
+                                .frame(width: 8, height: 8)
                             
-                            HStack {
-                                Image("dot")
-                                    .resizable()
-                                    .frame(width: 8, height: 8)
-                                
-                                Text("삭제된 계정의 게시글 및 댓글은 모두 삭제됩니다.")
-                                    .font(.system(size: 12))
-                                Spacer()
-                            }
-                            
-                            HStack {
-                                Image("dot")
-                                    .resizable()
-                                    .frame(width: 8, height: 8)
-                                
-                                Text("그동안 \"똑똑한 나만의 옷장\" Cleset을 이용해주셔서 감사합니다.")
-                                    .font(.system(size: 12))
-                                Spacer()
-                            }
-                            
+                            Text("한번 삭제된 계정은 더이상 복구할 수 없습니다.")
+                                .font(.system(size: 12))
+                            Spacer()
                         }
-                        .padding(.horizontal, 30)
-                     
+                        
+                        HStack {
+                            Image("dot")
+                                .resizable()
+                                .renderingMode(.template)
+                                .foregroundStyle(Color.background)
+                                .frame(width: 8, height: 8)
+                            
+                            Text("삭제된 계정의 게시글 및 댓글은 모두 삭제됩니다.")
+                                .font(.system(size: 12))
+                            Spacer()
+                        }
+                        
+                        HStack {
+                            Image("dot")
+                                .resizable()
+                                .renderingMode(.template)
+                                .foregroundStyle(Color.background)
+                                .frame(width: 8, height: 8)
+                            
+                            Text("그동안 \"똑똑한 나만의 옷장\" Cleset을 이용해주셔서 감사합니다.")
+                                .font(.system(size: 12))
+                            Spacer()
+                        }
+                        
+                    }
+                    .padding(.horizontal, 30)
+                    
                 }
                 .padding(.vertical, 20)
                 .background(Color.gray0)
@@ -64,7 +71,7 @@ struct DeleteAccountView: View {
             
             HStack(spacing: 30) {
                 Button {
-                    
+                    viewModel.send(.deleteButtonTap)
                 } label: {
                     Text("회원 탈퇴하기")
                         .foregroundStyle(Color.mainGreen)
@@ -96,7 +103,19 @@ struct DeleteAccountView: View {
             
             Spacer()
         }
+        .background(Color.background)
         .navigationBarBackButtonHidden()
+        .alert(isPresented: $viewModel.presentingAlert, content: {
+            Alert(
+                title: Text("알림"),
+                message: Text("그 동안 이용해주셔서 감사합니다."),
+                dismissButton: .default(Text("확인"), action: {
+                    authViewModel.send(.logout)
+                })
+                
+            )
+        })
+
     }
 }
 

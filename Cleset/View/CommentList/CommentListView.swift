@@ -44,6 +44,7 @@ struct CommentListView: View {
                 
                 HStack {
                     TextEditor(text: $comment)
+                        .scrollContentBackground(.hidden)
                     
                     Button {
                         viewModel.send(.createComment(comment))
@@ -51,7 +52,10 @@ struct CommentListView: View {
                     } label: {
                         Image("paperPlane")
                             .resizable()
+                            .renderingMode(.template)
+                            .foregroundStyle(Color.bk)
                             .frame(width: 45, height: 40)
+                        
                     }
                     .buttonStyle(PlainButtonStyle())
                     
@@ -61,6 +65,7 @@ struct CommentListView: View {
             }
             
         }
+        .background(Color.background)
         .alert(isPresented: Binding(get: {
             isPresentDeleteConfirmAlert && targetComment != nil
         }, set: { _ in
@@ -89,6 +94,7 @@ struct CommentListView: View {
                 editedComment: targetComment!.commentBody,
                 isPresentEditView: $isPresentEditView
             )
+            .background(Color.background)
             .presentationDetents([.height(200)])
             .presentationDragIndicator(.automatic)
             .onDisappear {
@@ -126,6 +132,8 @@ struct CommentItem: View {
                                 Text("수정")
                                 Spacer()
                                 Image("edit")
+                                    .renderingMode(.template)
+                                    .foregroundStyle(Color.bk)
                             }
                         }
                         
@@ -142,6 +150,8 @@ struct CommentItem: View {
                     } label: {
                         Image("verticalEllipsis")
                             .resizable()
+                            .renderingMode(.template)
+                            .foregroundStyle(Color.bk)
                             .frame(width: 15, height: 15)
                     }
                 }
@@ -199,6 +209,7 @@ struct CommentEditView: View {
                 .font(.system(size: 14))
                 .clipShape(RoundedRectangle(cornerRadius: 5))
                 .border(Color.gray0, width: 1)
+                .scrollContentBackground(.hidden)
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 20)

@@ -67,6 +67,7 @@ struct BoardListView: View {
             
             Spacer()
         }
+        .background(Color.background)
     }
 }
 

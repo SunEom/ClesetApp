@@ -31,6 +31,7 @@ struct PostView: View {
                 
             }
         }
+        .background(Color.background)
         .navigationBarBackButtonHidden()
         .onAppear {
             viewModel.send(.fetchPostDetail)
@@ -67,6 +68,8 @@ struct PostView: View {
                HStack {
                    Text("수정하기")
                    Image("edit")
+                       .renderingMode(.template)
+                       .foregroundStyle(Color.bk)
                }
            }
            
@@ -81,7 +84,9 @@ struct PostView: View {
        } label: {
            Image("verticalEllipsis")
                .resizable()
+               .renderingMode(.template)
                .frame(width: 15, height: 15)
+               .foregroundStyle(Color.bk)
        }.menuStyle(.button)
         : nil
     }

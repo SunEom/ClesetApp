@@ -37,6 +37,7 @@ struct ManageGroupList: View {
                 }
             }
         }
+        .background(Color.background)
         .navigationBarBackButtonHidden()
         .sheet(isPresented: Binding<Bool>(get: {
             return isPresentingEditView && selectedGroup != nil
@@ -97,6 +98,8 @@ struct ManageGroupList: View {
                     isPresentingEditView = true
                 } label: {
                     Image("edit")
+                        .renderingMode(.template)
+                        .foregroundStyle(Color.bk)
                 }
                 
                 Spacer().frame(width: 10)

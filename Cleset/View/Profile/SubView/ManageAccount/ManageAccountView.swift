@@ -58,6 +58,7 @@ struct ManageAccountView: View {
             .buttonStyle(PlainButtonStyle())
             Spacer()
         }
+        .background(Color.background)
         .navigationBarBackButtonHidden()
     }
         
@@ -70,7 +71,7 @@ struct ManageAccountView: View {
             }
             .padding(.horizontal, 20)
             .frame(height: 40)
-            .background(Color.white)
+            .background(Color.background)
         }
     }
 

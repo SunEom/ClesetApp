@@ -26,6 +26,7 @@ struct EditProfileView: View {
                 }.padding(.horizontal, 20)
             }
         }
+        .background(Color.background)
         .navigationBarBackButtonHidden()
         .alert(isPresented: $viewModel.presentingAlert, content: {
             Alert(

@@ -35,7 +35,7 @@ struct AuthView: View {
         .onAppear {
             viewModel.send(.checkAuthenticatedState)
         }
-        
+        .preferredColorScheme(container.appearanceController.appearance.colorSchme)
     
     }
 }

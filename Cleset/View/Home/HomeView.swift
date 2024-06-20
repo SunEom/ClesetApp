@@ -101,6 +101,7 @@ struct HomeView: View {
             newClothButton
        
         }
+        .background(Color.background)
     }
     
     var header: some View {
@@ -327,7 +328,7 @@ struct HomeSeasonButton: View {
                 
                 Text(season.displayName)
                     .font(.system(size: 12))
-                    .foregroundStyle(selectedSeason == season ? Color.black : Color.gray)
+                    .foregroundStyle(selectedSeason == season ? Color.bk : Color.gray)
             }
         }
     }
@@ -356,7 +357,7 @@ struct HomeCategoryButton: View {
                 
                 Text(category.rawValue)
                     .font(.system(size: 12))
-                    .foregroundStyle(selectedCategory == category ? Color.black : Color.gray)
+                    .foregroundStyle(selectedCategory == category ? Color.bk : Color.gray)
             }
         }
     }

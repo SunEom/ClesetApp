@@ -65,6 +65,7 @@ struct DetailView: View {
             }
             
         }
+        .background(Color.background)
         .navigationBarBackButtonHidden()
         .sheet(isPresented: $groupListViewPresent, content: {
             GroupListView(viewModel: GroupListViewModel(container: container, clothItem: viewModel.clothData))
@@ -98,6 +99,8 @@ struct DetailView: View {
                HStack {
                    Text("수정하기")
                    Image("edit")
+                       .renderingMode(.template)
+                       .foregroundStyle(Color.bk)
                }
            }
            
@@ -113,6 +116,8 @@ struct DetailView: View {
        } label: {
            Image("verticalEllipsis")
                .resizable()
+               .renderingMode(.template)
+               .foregroundStyle(Color.bk)
                .frame(width: 15, height: 15)
        }.menuStyle(.button)
     }
@@ -127,6 +132,8 @@ struct DetailView: View {
                 } label: {
                     Image("folderAdd")
                         .resizable()
+                        .renderingMode(.template)
+                        .foregroundStyle(Color.bk)
                         .frame(width: 22, height: 22)
                 }
                 .shadow(radius: 1)

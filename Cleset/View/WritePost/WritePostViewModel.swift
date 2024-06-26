@@ -77,30 +77,44 @@ final class WritePostViewModel: ObservableObject {
                 selectedImagePreview = nil
                 
             case let .saveButtonTap(title, boardType, postBody):
-                switch mode {
-                    case .create:
-                        container.services
-                            .postService
-                            .createNewPost(boardType: boardType, title: title, postBody: postBody, imageData: selectedImageData)
-                            .receive(on: DispatchQueue.main)
-                            .sink { completion in
-                            } receiveValue: { [weak self] _ in
-                                self?.alertData = AlertData(result: true, title: "성공", description: "게시글 작성에 성공했습니다!")
-                            }.store(in: &subscriptions)
-                        
-                    case .update:
-                        container.services
-                            .postService
-                            .updatePost(postId: postData!.postId, boardType: boardType, title: title, postBody: postBody, imageData: selectedImageData)
-                            .receive(on: DispatchQueue.main)
-                            .sink { completion in
-                            } receiveValue: { [weak self] _ in
-                                self?.alertData = AlertData(result: true, title: "성공", description: "게시글 수정에 성공했습니다!")
-                            }.store(in: &subscriptions)
+                if self.inputCheck(title: title, postBody: postBody) {
+                    switch mode {
+                        case .create:
+                            container.services
+                                .postService
+                                .createNewPost(boardType: boardType, title: title, postBody: postBody, imageData: selectedImageData)
+                                .receive(on: DispatchQueue.main)
+                                .sink { completion in
+                                } receiveValue: { [weak self] _ in
+                                    self?.alertData = AlertData(result: true, title: "성공", description: "게시글 작성에 성공했습니다!")
+                                }.store(in: &subscriptions)
+                            
+                        case .update:
+                            container.services
+                                .postService
+                                .updatePost(postId: postData!.postId, boardType: boardType, title: title, postBody: postBody, imageData: selectedImageData)
+                                .receive(on: DispatchQueue.main)
+                                .sink { completion in
+                                } receiveValue: { [weak self] _ in
+                                    self?.alertData = AlertData(result: true, title: "성공", description: "게시글 수정에 성공했습니다!")
+                                }.store(in: &subscriptions)
+                    }
                 }
                 
             case .alertDismiss:
                 alertData = nil
+        }
+    }
+    
+    func inputCheck(title: String, postBody: String) -> Bool {
+        if title == "" {
+            self.alertData = AlertData(result: false, title: "실패", description: "게시글 제목을 입력해주세요.")
+            return false
+        } else if postBody == "" {
+            self.alertData = AlertData(result: false, title: "실패", description: "게시글 내용을 입력해주세요.")
+            return false
+        } else {
+            return true
         }
     }
 }

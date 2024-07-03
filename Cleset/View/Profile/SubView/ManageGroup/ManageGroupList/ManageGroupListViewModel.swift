@@ -10,7 +10,7 @@ import Combine
 
 final class ManageGroupListViewModel: ObservableObject {
     enum Action {
-        case fetchGroupList
+        case fetchGroupList(() -> Void = {})
         case deleteGroup(ClothGroupObject)
         case updateGroup(group: ClothGroupObject, newName: String)
     }
@@ -27,12 +27,13 @@ final class ManageGroupListViewModel: ObservableObject {
     
     func send(_ action: Action) {
         switch action {
-            case .fetchGroupList:
+            case let .fetchGroupList(completion):
                 loading = true
                 container.services.groupService.getClothGroupList()
                     .receive(on: DispatchQueue.main)
-                    .sink { [weak self] completion in
+                    .sink { [weak self] _ in
                         self?.loading = false
+                        completion()
                     } receiveValue: { [weak self] groupList in
                         self?.groupList = groupList
                     }.store(in: &subscriptions)
@@ -49,7 +50,7 @@ final class ManageGroupListViewModel: ObservableObject {
                                 return
                         }
                     } receiveValue: { [weak self] _ in
-                        self?.send(.fetchGroupList)
+                        self?.send(.fetchGroupList())
                     }.store(in: &subscriptions)
                 
             case let .updateGroup(group, newName):
@@ -57,7 +58,7 @@ final class ManageGroupListViewModel: ObservableObject {
                     .receive(on: DispatchQueue.main)
                     .sink { completion in
                     } receiveValue: { [weak self] _ in
-                        self?.send(.fetchGroupList)
+                        self?.send(.fetchGroupList())
                     }.store(in: &subscriptions)
         }
     }

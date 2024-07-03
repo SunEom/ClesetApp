@@ -55,7 +55,7 @@ struct ManageGroupList: View {
             }
         })
         .onAppear {
-            viewModel.send(.fetchGroupList)
+            viewModel.send(.fetchGroupList())
         }
         .alert(isPresented: $isPresentingDeleteAlertView, content: {
             Alert(

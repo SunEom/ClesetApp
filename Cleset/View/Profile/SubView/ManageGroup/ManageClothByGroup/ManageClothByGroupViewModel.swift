@@ -20,25 +20,27 @@ final class ManageClothByGroupViewModel: ObservableObject {
     }
     
     enum Action {
-        case fetchGroups
-        case fetchGroupCloth(ClothGroupObject)
+        case fetchGroups(()->Void = {})
+        case fetchGroupCloth(ClothGroupObject, ()->Void = {})
     }
     
     func send(_ action: Action) {
         switch action {
-            case .fetchGroups:
+            case let .fetchGroups(completion):
                 container.services.groupService
                     .getClothGroupList()
                     .receive(on: DispatchQueue.main)
-                    .sink { completion in
+                    .sink { _ in
+                        completion()
                     } receiveValue: { [weak self] groups in
                         self?.groups = groups
                     }.store(in: &subscriptions)
                 
-            case let .fetchGroupCloth(group):
+            case let .fetchGroupCloth(group, completion):
                 container.services.clothService.getGroupCloth(group: group)
                     .receive(on: DispatchQueue.main)
-                    .sink { completion in
+                    .sink { _ in
+                        completion()
                     } receiveValue: { [weak self] groupClothList in
                         guard let self = self else { return }
                         self.clothes = self.makeClothViewModels(with: groupClothList)

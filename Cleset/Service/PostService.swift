@@ -106,11 +106,15 @@ final class StubPostService: PostServiceType {
     }
     
     func createNewPost(boardType: BoardType, title: String, postBody: String, imageData: Data?) -> AnyPublisher<Post, ServiceError> {
-        return Empty().eraseToAnyPublisher()
+        return Just(Post.stubList[0])
+            .setFailureType(to: ServiceError.self)
+            .eraseToAnyPublisher()
     }
     
     func updatePost(postId: Int, boardType: BoardType, title: String, postBody: String, imageData: Data?) -> AnyPublisher<Post, ServiceError> {
-        return Empty().eraseToAnyPublisher()
+        return Just(Post.stubList[0])
+            .setFailureType(to: ServiceError.self)
+            .eraseToAnyPublisher()
     }
     
     func toggleFavorite(postId: Int, favorite: Bool) -> AnyPublisher<PostDetail, ServiceError> {

@@ -53,7 +53,7 @@ final class WritePostViewModel: ObservableObject {
     enum Action {
         case imageSelected(PhotosPickerItem?)
         case imageDisselected
-        case saveButtonTap(title: String, boardType: BoardType, postBody: String)
+        case saveButtonTap(title: String, boardType: BoardType, postBody: String, completion: () -> Void = {})
         case alertDismiss
     }
     
@@ -76,7 +76,7 @@ final class WritePostViewModel: ObservableObject {
                 selectedImageData = nil
                 selectedImagePreview = nil
                 
-            case let .saveButtonTap(title, boardType, postBody):
+            case let .saveButtonTap(title, boardType, postBody, completion):
                 if self.inputCheck(title: title, postBody: postBody) {
                     switch mode {
                         case .create:
@@ -84,7 +84,8 @@ final class WritePostViewModel: ObservableObject {
                                 .postService
                                 .createNewPost(boardType: boardType, title: title, postBody: postBody, imageData: selectedImageData)
                                 .receive(on: DispatchQueue.main)
-                                .sink { completion in
+                                .sink { _ in
+                                    completion()
                                 } receiveValue: { [weak self] _ in
                                     self?.alertData = AlertData(result: true, title: "성공", description: "게시글 작성에 성공했습니다!")
                                 }.store(in: &subscriptions)
@@ -94,7 +95,8 @@ final class WritePostViewModel: ObservableObject {
                                 .postService
                                 .updatePost(postId: postData!.postId, boardType: boardType, title: title, postBody: postBody, imageData: selectedImageData)
                                 .receive(on: DispatchQueue.main)
-                                .sink { completion in
+                                .sink { _ in
+                                    completion()
                                 } receiveValue: { [weak self] _ in
                                     self?.alertData = AlertData(result: true, title: "성공", description: "게시글 수정에 성공했습니다!")
                                 }.store(in: &subscriptions)

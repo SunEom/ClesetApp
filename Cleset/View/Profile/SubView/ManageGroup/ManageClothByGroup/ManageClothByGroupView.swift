@@ -52,7 +52,7 @@ struct ManageClothByGroupView: View {
         }
         .background(Color.background)
         .onAppear {
-            viewModel.send(.fetchGroups)
+            viewModel.send(.fetchGroups())
         }
         .navigationBarBackButtonHidden()
     }

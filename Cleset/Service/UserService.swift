@@ -61,15 +61,15 @@ final class UserService: UserServiceType {
 
 final class StubUserService: UserServiceType {
     func signUpUser(nickname: String, gender: Gender, age: Int) -> AnyPublisher<UserModel, ServiceError> {
-        return Empty().eraseToAnyPublisher()
+        return Just(UserModel.stub)
+            .setFailureType(to: ServiceError.self)
+            .eraseToAnyPublisher()
     }
     
     func getUserData() -> AnyPublisher<UserModel, ServiceError> {
         return Just(UserModel(id: 1, nickname: "Suneom", gender: .male, age: 27, uid: "asdfqwer1234"))
             .setFailureType(to: ServiceError.self)
             .eraseToAnyPublisher()
-        
-//        return Empty().eraseToAnyPublisher()
     }
     
     func checkUserAlreadySigned() -> AnyPublisher<Bool, ServiceError> {
@@ -77,11 +77,15 @@ final class StubUserService: UserServiceType {
     }
     
     func nicknameCheck(nickname: String) -> AnyPublisher<Bool, ServiceError> {
-        return Empty().eraseToAnyPublisher()
+        return Just(false)
+            .setFailureType(to: ServiceError.self)
+            .eraseToAnyPublisher()
     }
     
     func updateUser(user: UserModel) -> AnyPublisher<UserModel, ServiceError> {
-        return Empty().eraseToAnyPublisher()
+        return Just(user)
+            .setFailureType(to: ServiceError.self)
+            .eraseToAnyPublisher()
     }
     
     func deleteAccount() -> AnyPublisher<Void, ServiceError> {

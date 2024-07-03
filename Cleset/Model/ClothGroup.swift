@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ClothGroupObject: Decodable, Identifiable {
+struct ClothGroupObject: Decodable, Identifiable, Equatable {
     var id: String = UUID().uuidString
     var folderId: Int
     var folderName: String
